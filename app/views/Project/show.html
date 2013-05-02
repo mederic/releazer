@@ -1,0 +1,12 @@
+#{extends 'main.html' /}
+#{set title: project.name /}
+
+<h1>${project.name}</h1>
+
+<ul>
+#{list project.releases, as:'release'}
+	<li>
+		<a href="@{Release.show(release.getId())}">${release.name}</a>
+	</li>
+#{/list}
+</ul>

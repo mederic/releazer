@@ -1,0 +1,29 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                       Application.index
+
+# Import Secure routes
+*      /                						module:secure
+
+# Import CRUD routes
+*     /admin           							module:crud
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+
+# project
+GET		/projects								Project.index
+GET		/project/{<[0-9]+>id}					Project.show
+GET		/project/{<[0-9]+>id}/last				Project.showLastRelease
+
+# release
+GET		/release/{<[0-9]+>id}					Release.show
+
+# file
+GET		/file/{<[0-9]+>id}						Release.getFile

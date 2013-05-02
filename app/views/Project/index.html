@@ -1,0 +1,10 @@
+#{extends 'main.html' /}
+#{set title:'Projects' /}
+
+<ul>
+#{list projects, as:'project'}
+	<li>
+		<a href="@{Project.show(project.getId())}">${project.name}</a>
+	</li>
+#{/list}
+</ul>

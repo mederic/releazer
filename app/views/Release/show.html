@@ -1,0 +1,20 @@
+#{extends 'main.html' /}
+#{set title: release.name /}
+
+<h1>Release for <span class="project-name">${release.project.name}</span></h1>
+<h2>${release.name}</h2>
+<span class="date">${release.date.format('dd/MM/yyyy')}</span>
+
+<h3>Release note</h3>
+<p>
+	${release.note}
+</p>
+
+<h3>Attached files</h3>
+<ul>
+#{list release.attachedFiles, as:'file'}
+	<li>
+		<a href="@{Release.getFile(file.getId())}">${file.name}</a>
+	</li>
+#{/list}
+</ul>
