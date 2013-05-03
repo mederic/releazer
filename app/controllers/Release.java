@@ -3,12 +3,14 @@ package controllers;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Date;
+import java.util.HashMap;
 
 import models.File;
 import models.File.FileType;
 import models.RoleType;
 import models.User;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -75,7 +77,7 @@ public class Release extends Controller {
 		show(release.id);		
 	}
 
-	public static void addFile(long id, java.io.File file) throws FileNotFoundException {
+	public static void addFile(long id, java.io.File file) throws FileNotFoundException, ConfigurationException {
 		models.Release release = models.Release.findById(id);
 		User currentUser = Security.getCurrentUser();
     	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
@@ -95,6 +97,9 @@ public class Release extends Controller {
 			if (lastPointIndex != -1)
 			{
 				if ("ipa".equalsIgnoreCase(file.getName().substring(lastPointIndex + 1))) {
+					HashMap<String, String> ipaMetadata = Ipa.getDataFromIpa(file);
+					
+					renderXml(ipaMetadata);
 					// ipa, we need more data...
 					newFile.type = FileType.IPA;
 					newFile.fileCode = Codec.hexSHA1(file.getName());
@@ -110,6 +115,11 @@ public class Release extends Controller {
 		show(release.id);
 	}
 	
+	private static void getDataFromIpa(java.io.File file) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public static void deleteFile(long id) {
 		final models.File file = models.File.findById(id);
 		models.Release release = file.release;
