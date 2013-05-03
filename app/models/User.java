@@ -48,4 +48,12 @@ public class User extends Model {
 		
 		return result;
 	}
+
+	public RoleType getRoleTypeFor(models.Project project) {
+		Role currentRole = Role.find("byUserAndProject", this, project).first();
+		if (currentRole != null)
+			return currentRole.role;
+		else
+			return null;
+	}
 }

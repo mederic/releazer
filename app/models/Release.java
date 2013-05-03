@@ -22,7 +22,10 @@ public class Release extends Model {
     public String name;    
 
     @Required
-    @ManyToOne(cascade=CascadeType.ALL)
+    public boolean isPublished;    
+
+    @Required
+    @ManyToOne
     public Project project;
     
     @Required
@@ -33,9 +36,6 @@ public class Release extends Model {
 
     @OneToMany(mappedBy="release")
     public Set<File> attachedFiles;
-    
-    @ManyToMany(mappedBy="attachedProjects") 
-    public Set<User> attachedUsers = new HashSet<User>(); 
 
     @Override
     public String toString() {

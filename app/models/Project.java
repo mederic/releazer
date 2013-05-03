@@ -20,7 +20,7 @@ public class Project extends Model {
     @ManyToMany(mappedBy="attachedProjects") 
     public Set<User> attachedUsers; 
 
-    @OneToMany(mappedBy="project")
+    @OneToMany(mappedBy="project", cascade=CascadeType.ALL)
     public Set<Release> releases;
     
     @Override

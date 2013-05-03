@@ -16,23 +16,19 @@ import play.db.jpa.Model;
 
 @Entity
 public class Role extends Model {
-	
-	public enum RoleType {
-	    DEVELOPER,
-	    CUSTOMER
-	}
-
-	@Required
-    public RoleType role;
-
-	@Required
-    @ManyToOne(cascade=CascadeType.ALL)
-    public Project project;
 
 	@Required
     @ManyToOne(cascade=CascadeType.ALL)
     public User user;
 	
+	@Required
+    @ManyToOne(cascade=CascadeType.ALL)
+    public RoleType role;
+	
+	@Required
+    @ManyToOne(cascade=CascadeType.ALL)
+    public Project project;
+
     @Override
     public String toString() {
     	return "[" + this.getId() + "] " + user.name + " : " + role.toString() + " for " + project.name;

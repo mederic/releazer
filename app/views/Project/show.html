@@ -3,10 +3,32 @@
 
 <h1>${project.name}</h1>
 
+<h2>Last Releases</h2>
 <ul>
 #{list project.releases, as:'release'}
+	#{if (release.isPublished)}
 	<li>
-		<a href="@{Release.show(release.getId())}">${release.name}</a>
+		<a href="@{Release.show(release.id)}">${release.name}</a>
 	</li>
+	#{/if}
 #{/list}
 </ul>
+
+<h2>Planned Releases</h2>
+<ul>
+#{list project.releases, as:'release'}
+	#{if (!release.isPublished)}
+	<li>
+		<a href="@{Release.show(release.id)}">${release.name}</a>
+	</li>
+	#{/if}
+#{/list}
+</ul>
+
+#{if (currentUserRoleType.canAddPlannedRelease)}
+
+	#{form @Project.newRelease(project.id)}
+		<input type="text" name="releaseName" placeholder="New release name..." />
+		<input type="submit" name="add-planned-release" value="Add planned release...">
+	#{/form}
+#{/if}

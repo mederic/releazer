@@ -10,9 +10,15 @@ import models.User;
 public class Security extends Secure.Security {
 	
 	static boolean authenticate(String username, String password) {
-        User user = User.find("byName", username).first();        
-        String hashPassword = Codec.hexSHA1(password);        
-        return user != null && user.password.equals(hashPassword);
+		if (User.count() == 0) {
+			// if no user, admin/admin is the default account...
+			return username.equals("admin") && password.equals("admin");
+		} else {
+			// otherwise, check rights in db...
+	        User user = User.find("byName", username).first();        
+	        String hashPassword = Codec.hexSHA1(password);        
+	        return user != null && user.password.equals(hashPassword);
+		}
     }
 	
 	static boolean check(String profile) {

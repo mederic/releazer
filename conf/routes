@@ -22,8 +22,17 @@ GET		/projects								Project.index
 GET		/project/{<[0-9]+>id}					Project.show
 GET		/project/{<[0-9]+>id}/last				Project.showLastRelease
 
+POST	/project/{<[0-9]+>id}/new				Project.newRelease
+
 # release
 GET		/release/{<[0-9]+>id}					Release.show
 
+POST	/release/{<[0-9]+>id}/edit				Release.edit
+POST	/release/{<[0-9]+>id}/addFile			Release.addFile
+
 # file
-GET		/file/{<[0-9]+>id}						Release.getFile
+GET		/file/{<[0-9]+>id}/{filename}			Release.getFile
+GET		/ipa/{fileCode}.ipa						Ipa.getIpaFile
+GET		/ipa/manifest/{fileCode}.plist			Ipa.getIpaManifest
+
+POST	/file/{<[0-9]+>id}/delete				Release.deleteFile

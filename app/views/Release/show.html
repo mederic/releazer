@@ -2,19 +2,75 @@
 #{set title: release.name /}
 
 <h1>Release for <span class="project-name">${release.project.name}</span></h1>
-<h2>${release.name}</h2>
-<span class="date">${release.date.format('dd/MM/yyyy')}</span>
 
-<h3>Release note</h3>
-<p>
-	${release.note}
-</p>
+#{if (release.isPublished || !currentUserRoleType.canEditPlannedRelease)}
+	
+	<h2>${release.name}</h2>
+	<span class="date">${release.date.format('dd/MM/yyyy')}</span>
+	
+	<h3>Release note</h3>
+	<p>
+		${release.note}
+	</p>
+	
+	<h3>Attached files</h3>
+	<ul>
+	#{list release.attachedFiles, as:'file'}
+		<li>
+			#{if (file.type == models.File.FileType.IPA)}
+				<a href="itms-services://?action=download-manifest&amp;url=${play.Play.configuration.getProperty("application.baseUrl")}@{Ipa.getIpaManifest(file.fileCode)}">${file.name}</a>
+			#{/if}
+			#{else}
+				<a href="@{Release.getFile(file.id, file.name)}">${file.name}</a>
+			#{/else}
+		</li>
+	#{/list}
+	</ul>
 
-<h3>Attached files</h3>
-<ul>
-#{list release.attachedFiles, as:'file'}
-	<li>
-		<a href="@{Release.getFile(file.getId())}">${file.name}</a>
-	</li>
-#{/list}
-</ul>
+#{/if}
+#{else}
+
+	<h2>Edition mode</h2>
+	<span class="date">Last edit : ${release.date.format('dd/MM/yyyy')}</span>
+	
+	<ul>
+	#{list release.attachedFiles, as:'file'}
+		<li>
+			<span class="file-name">${file.name}</span>
+			#{form @Release.deleteFile(file.id)}
+				<input type="submit" value="delete" />
+			#{/form}
+		</li>
+	#{/list}
+	</ul>
+	
+	#{form @Release.addFile(release.id), enctype:'multipart/form-data'}
+	   <input type="file" name="file">
+	   <input type="submit" name="submit" value="Upload file">
+	#{/form}
+
+	#{form @Release.edit(release.id)}	
+		<label for="name">Release name</label>
+		<input type="text" name="name" value="${release.name}" placeholder="Release name..."/>
+		
+		<input type="hidden" name="date" value="${new Date().format('yyyy-MM-dd')}" />		
+		
+		<label for="note">Release note</label>
+		<textarea name="note" placeholder="Release note...">${release.note}</textarea>
+		
+		#{if (currentUserRoleType.canDeletePlannedRelease)}
+			<input type="submit" name="action" value="delete" />
+		#{/if}
+		
+		<input type="submit" name="action" value="save" />
+		
+		#{if (currentUserRoleType.canPublishPlannedRelease)}
+			<input type="submit" name="action" value="publish" />
+		#{/if}
+	#{/form}
+	
+	
+#{/else}
+
+
+<a href="@{Project.show(release.project.id)}">Back to project page</a>
