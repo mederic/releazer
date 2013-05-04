@@ -36,9 +36,6 @@ public class RoleType extends Model {
     public boolean canPublishPlannedRelease;
 	
 	@Required
-    public boolean canDeleteRelease;
-	
-	@Required
     public boolean canGetReleaseFile;
 
 	@Required

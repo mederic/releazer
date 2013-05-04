@@ -1,7 +1,5 @@
 package controllers;
 
-import java.util.List;
-
 import play.libs.Codec;
 import models.File;
 import models.Role;
