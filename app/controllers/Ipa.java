@@ -18,8 +18,8 @@ import models.File.FileType;
 import models.RoleType;
 import models.User;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.plist.PropertyListConfiguration;
+//import org.apache.commons.configuration.ConfigurationException;
+//import org.apache.commons.configuration.plist.PropertyListConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -84,7 +84,7 @@ public class Ipa extends Controller {
 		renderXml(XML.getDocument(textResponse));
 	}
 
-	public static HashMap<String, String> getDataFromIpa(java.io.File file) throws ConfigurationException {
+	public static HashMap<String, String> getDataFromIpa(java.io.File file) {
 		HashMap<String, String> result = new HashMap<String, String>();
 		ZipFile ipaZipFile;
 		try {

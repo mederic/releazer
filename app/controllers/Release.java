@@ -10,7 +10,7 @@ import models.File.FileType;
 import models.RoleType;
 import models.User;
 
-import org.apache.commons.configuration.ConfigurationException;
+//import org.apache.commons.configuration.ConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -77,7 +77,7 @@ public class Release extends Controller {
 		show(release.id);		
 	}
 
-	public static void addFile(long id, java.io.File file) throws FileNotFoundException, ConfigurationException {
+	public static void addFile(long id, java.io.File file) throws FileNotFoundException {
 		models.Release release = models.Release.findById(id);
 		User currentUser = Security.getCurrentUser();
     	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
