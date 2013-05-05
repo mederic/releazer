@@ -17,14 +17,8 @@ import play.libs.MimeTypes;
 import play.mvc.Controller;
 import play.mvc.With;
 
-@With(Secure.class)
+@With({Secure.class, DeviceHelper.class})
 public class Release extends Controller {
-
-    public enum DeviceType {
-
-	STANDARD,
-	IOS
-    }
 
     public static void show(long id) {
 	models.Release release = models.Release.findById(id);
@@ -35,8 +29,7 @@ public class Release extends Controller {
 	    notFound();
 	}
 
-	DeviceType deviceType = getDeviceType();
-	render(release, currentUserRoleType, deviceType);
+	render(release, currentUserRoleType);
     }
 
     public static void edit(long id, String name, Date date, String note, String action) {
@@ -145,14 +138,5 @@ public class Release extends Controller {
 	notFoundIfNull(file);
 	response.setContentTypeIfNotSet(file.file.type());
 	renderBinary(file.file.get());
-    }
-
-    private static DeviceType getDeviceType() {
-	String userAgent = request.headers.get("user-agent").value();
-	if (userAgent.contains("iPod") || userAgent.contains("iPhone") || userAgent.contains("iPad")) {
-	    return DeviceType.IOS;
-	} else {
-	    return DeviceType.STANDARD;
-	}
     }
 }
