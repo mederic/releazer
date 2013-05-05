@@ -1,14 +1,7 @@
 package models;
 
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import play.data.validation.Required;
@@ -18,10 +11,10 @@ import play.db.jpa.Model;
 @Entity
 public class File extends Model {
     
-	public enum FileType {
-		UNKNOWN,
-		IPA
-	};
+    public enum FileType {
+        STANDARD,
+        IPA
+    };
 	
 	
 	@Required

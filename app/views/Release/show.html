@@ -17,11 +17,11 @@
 	<ul>
 	#{list release.attachedFiles, as:'file'}
 		<li>
-			#{if (file.type == models.File.FileType.IPA)}
-				<a href="itms-services://?action=download-manifest&amp;url=${play.Play.configuration.getProperty("application.baseUrl")}@{Ipa.getIpaManifest(file.fileCode)}">${file.name}</a>
-			#{/if}
+			#{if ((file.type == models.File.FileType.IPA) && (deviceType == controllers.Release.DeviceType.IOS))}
+			    <a href="itms-services://?action=download-manifest&amp;url=${play.Play.configuration.getProperty("application.baseUrl")}@{Ipa.getIpaManifest(file.fileCode)}">Install ${file.name}</a>
+                        #{/if}
 			#{else}
-				<a href="@{Release.getFile(file.id, file.name)}">${file.name}</a>
+                            <a href="@{Release.getFile(file.id, file.name)}">${file.name}</a>
 			#{/else}
 		</li>
 	#{/list}

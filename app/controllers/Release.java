@@ -10,139 +10,149 @@ import models.File.FileType;
 import models.RoleType;
 import models.User;
 
-//import org.apache.commons.configuration.ConfigurationException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 import play.db.jpa.Blob;
 import play.libs.Codec;
 import play.libs.MimeTypes;
-import play.libs.XML;
 import play.mvc.Controller;
 import play.mvc.With;
 
 @With(Secure.class)
 public class Release extends Controller {
 
+    public enum DeviceType {
+
+	STANDARD,
+	IOS
+    }
+
     public static void show(long id) {
-        models.Release release = models.Release.findById(id);
-        User currentUser = Security.getCurrentUser();
-        RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
+	models.Release release = models.Release.findById(id);
+	User currentUser = Security.getCurrentUser();
+	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-        if (!Security.isAuthorizedFor(release) || (!release.isPublished && !currentUserRoleType.canSeePlannedRelease)) {
-            notFound();
-        }
+	if (!Security.isAuthorizedFor(release) || (!release.isPublished && !currentUserRoleType.canSeePlannedRelease)) {
+	    notFound();
+	}
 
-        render(release, currentUserRoleType);
+	DeviceType deviceType = getDeviceType();
+	render(release, currentUserRoleType, deviceType);
     }
 
     public static void edit(long id, String name, Date date, String note, String action) {
-        models.Release release = models.Release.findById(id);
-        User currentUser = Security.getCurrentUser();
-        RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
+	models.Release release = models.Release.findById(id);
+	User currentUser = Security.getCurrentUser();
+	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-        if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canEditPlannedRelease)) {
-            notFound();
-        }
+	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canEditPlannedRelease)) {
+	    notFound();
+	}
 
-        if ("delete".equalsIgnoreCase(action)) {
-            if (currentUserRoleType.canDeletePlannedRelease) {
-                long projectId = release.project.id;
+	if ("delete".equalsIgnoreCase(action)) {
+	    if (currentUserRoleType.canDeletePlannedRelease) {
+		long projectId = release.project.id;
 
-                for (File file : release.attachedFiles) {
-                    file.delete();
-                }
+		for (File file : release.attachedFiles) {
+		    file.delete();
+		}
 
-                release.delete();
-                Project.show(projectId);
-            } else {
-                notFound();
-            }
-        } else if ("publish".equalsIgnoreCase(action)) {
-            if (currentUserRoleType.canPublishPlannedRelease) {
-                release.isPublished = true;
-                release.save();
-            } else {
-                notFound();
-            }
-        } else {
-            if (name != null && !name.isEmpty()) {
-                release.name = name;
-            }
+		release.delete();
+		Project.show(projectId);
+	    } else {
+		notFound();
+	    }
+	} else {
+	    if ("publish".equalsIgnoreCase(action)) {
+		if (currentUserRoleType.canPublishPlannedRelease) {
+		    release.isPublished = true;
+		} else {
+		    notFound();
+		}
+	    }
 
-            release.date = date;
-            release.note = note;
-            release.save();
-        }
+	    if (name != null && !name.isEmpty()) {
+		release.name = name;
+	    }
 
-        show(release.id);
+	    release.date = date;
+	    release.note = note;
+
+	    release.save();
+	}
+	show(release.id);
     }
 
-    public static void addFile(long id, java.io.File file) throws FileNotFoundException {
-        models.Release release = models.Release.findById(id);
-        User currentUser = Security.getCurrentUser();
-        RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
+    public static void addFile(long id, java.io.File file) throws FileNotFoundException, Exception {
+	models.Release release = models.Release.findById(id);
+	User currentUser = Security.getCurrentUser();
+	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-        if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canEditPlannedRelease)) {
-            notFound();
-        }
+	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canEditPlannedRelease)) {
+	    notFound();
+	}
 
-        if (file != null) {
-            File newFile = new models.File();
-            newFile.release = release;
-            newFile.name = file.getName();
-            newFile.file = new Blob();
-            newFile.file.set(new FileInputStream(file), MimeTypes.getContentType(file.getName()));
+	if (file != null) {
+	    File newFile = new models.File();
+	    newFile.release = release;
+	    newFile.name = file.getName();
+	    newFile.file = new Blob();
+	    newFile.file.set(new FileInputStream(file), MimeTypes.getContentType(file.getName()));
 
-            int lastPointIndex = file.getName().lastIndexOf(".");
-            if (lastPointIndex != -1) {
-                if ("ipa".equalsIgnoreCase(file.getName().substring(lastPointIndex + 1))) {
-                    HashMap<String, String> ipaMetadata = Ipa.getDataFromIpa(file);
+	    newFile.type = FileType.STANDARD;
 
-                    renderXml(ipaMetadata);
-                    // ipa, we need more data...
-                    newFile.type = FileType.IPA;
-                    newFile.fileCode = Codec.hexSHA1(file.getName());
-                    newFile.metadata.put("bundle-identifier", "com.O12S.PlanetSushi");
-                    newFile.metadata.put("bundle-version", "1.0");
-                    newFile.metadata.put("kind", "software");
-                    newFile.metadata.put("title", "PlanetSushi");
-                }
-            }
-            newFile.save();
-        }
+	    int lastPointIndex = file.getName().lastIndexOf(".");
+	    if (lastPointIndex != -1) {
+		if ("ipa".equalsIgnoreCase(file.getName().substring(lastPointIndex + 1))) {
+		    HashMap<String, String> ipaMetadata = Ipa.getDataFromIpa(file);
+		    // ipa, we need more data...
+		    newFile.type = FileType.IPA;
+		    newFile.fileCode = Codec.hexSHA1(file.getName());
+		    newFile.metadata = ipaMetadata;
+		}
+	    }
+	    newFile.save();
+	}
 
-        show(release.id);
+	show(release.id);
     }
 
     public static void deleteFile(long id) {
-        final models.File file = models.File.findById(id);
-        models.Release release = file.release;
-        User currentUser = Security.getCurrentUser();
-        RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
+	final models.File file = models.File.findById(id);
+	models.Release release = file.release;
+	User currentUser = Security.getCurrentUser();
+	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-        if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canEditPlannedRelease)) {
-            notFound();
-        }
+	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canEditPlannedRelease)) {
+	    notFound();
+	}
 
-        file.file.getFile().delete();
-        file.delete();
+	file.file.getFile().delete();
+	file.delete();
 
-        show(release.id);
+	show(release.id);
     }
 
     public static void getFile(long id, String filename) {
-        final models.File file = models.File.findById(id);
-        models.Release release = file.release;
-        User currentUser = Security.getCurrentUser();
-        RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
+	final models.File file = models.File.findById(id);
+	models.Release release = file.release;
+	User currentUser = Security.getCurrentUser();
+	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-        if (!Security.isAuthorizedFor(file) || !file.name.equals(filename) || !currentUserRoleType.canGetReleaseFile) {
-            notFound();
-        }
+	if (!Security.isAuthorizedFor(file) || !file.name.equals(filename) || !currentUserRoleType.canGetReleaseFile) {
+	    notFound();
+	}
 
-        notFoundIfNull(file);
-        response.setContentTypeIfNotSet(file.file.type());
-        renderBinary(file.file.get());
+	notFoundIfNull(file);
+	response.setContentTypeIfNotSet(file.file.type());
+	renderBinary(file.file.get());
+    }
+
+    private static DeviceType getDeviceType() {
+	String userAgent = request.headers.get("user-agent").value();
+	if (userAgent.contains("iPod") || userAgent.contains("iPhone") || userAgent.contains("iPad")) {
+	    return DeviceType.IOS;
+	} else {
+	    return DeviceType.STANDARD;
+	}
     }
 }

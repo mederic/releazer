@@ -1,5 +1,7 @@
 package controllers;
 
+import com.dd.plist.NSDictionary;
+import com.dd.plist.PropertyListParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -66,7 +68,7 @@ public class Ipa extends Controller {
         renderXml(XML.getDocument(textResponse));
     }
 
-    public static HashMap<String, String> getDataFromIpa(java.io.File file) {
+    public static HashMap<String, String> getDataFromIpa(java.io.File file) throws Exception {
         HashMap<String, String> result = new HashMap<String, String>();
         ZipFile ipaZipFile;
         try {
@@ -75,20 +77,21 @@ public class Ipa extends Controller {
             final Enumeration<? extends ZipEntry> entries = ipaZipFile.entries();
 
             java.io.File plistFile = new java.io.File(file.getAbsolutePath() + ".plist");
-            boolean ok = false;
+            InputStream input = null;
             while (entries.hasMoreElements()) {
                 ZipEntry zipEntry = entries.nextElement();
                 if (zipEntry.getName().endsWith("Info.plist")) {
-                    InputStream input = ipaZipFile.getInputStream(zipEntry);
-                    IO.write(input, plistFile);
-                    System.out.println(IO.readContentAsString(plistFile));
-                    ok = true;
+                    input = ipaZipFile.getInputStream(zipEntry);
                     break;
                 }
             }
 
-            if (ok) {
-                //PropertyListConfiguration plist = new PropertyListConfiguration(plistFile);
+            if (input != null) {
+                NSDictionary rootDict = (NSDictionary) PropertyListParser.parse(input);
+                result.put("bundle-identifier", rootDict.objectForKey("CFBundleIdentifier").toString());
+                result.put("bundle-version", rootDict.objectForKey("CFBundleVersion").toString());
+                result.put("kind", "software");
+                result.put("title", rootDict.objectForKey("CFBundleName").toString());
             }
 
         } catch (ZipException e) {
