@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width" />
 
         <meta charset="${_response_encoding}">
+	<link href='http://fonts.googleapis.com/css?family=Noto+Sans|Roboto+Slab' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
@@ -15,8 +16,11 @@
     </head>
     <body>
 	<header>
+	    <a href="@{Application.index()}">
+	    <img src="@{'/public/images/logo.png'}" alt="Releazer" id="logo" />
+	    </a>
+	    <ul class="action">
 	    #{if (controllers.Security.isConnected())}
-	    <ul>
 		<li>
 		    <a href="@{Project.index}">Projects</a>
 		</li>
@@ -29,19 +33,19 @@
 		<li class="current-user">
 		    <span>${controllers.Security.connected()}</span>
 		    #{gravatar.img controllers.Security.getCurrentUserEmail(), size:56, default:'identicon' /}
-		</li>
-	    </ul>		
+		</li>	
 	    #{/if}
 	    #{else}
-	    <a href="@{Secure.login}">Log in</a>
+		<li>
+		    <a href="@{Secure.login}">Log in</a>
+		</li>	
 	    #{/else}
+	    </ul>	
 	</header>
 	<section>
 	    
-	    #{ifErrors}	    
-	    <p class="error">
-		<h1>Oops…</h1>
-
+	    #{ifErrors}	  
+	    <p class="error">  
 		#{errors}
 		<li>${error}</li>
 		#{/errors}

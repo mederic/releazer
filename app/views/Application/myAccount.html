@@ -3,10 +3,10 @@
 
 <h1>My account</h1>
 #{form @Application.updateAccount() }
-    <input type="text" name="email" placeholder="email" value="${user.email}" />
+    <input type="text" name="email" placeholder="Email" value="${user.email}" />
     
-    <input type="password" name="password" />
-    <input type="password" name="repassword" />
+    <input type="password" name="password" placeholder="Password"/>
+    <input type="password" name="repassword" placeholder="Password again..."/>
     
     <input type="submit" name="save" value="Save changes" />
 #{/form}
