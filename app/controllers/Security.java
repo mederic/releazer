@@ -1,5 +1,6 @@
 package controllers;
 
+import static controllers.Secure.Security.connected;
 import play.libs.Codec;
 import models.File;
 import models.Role;
@@ -9,6 +10,8 @@ public class Security extends Secure.Security {
 
     final static String ADMIN_NAME = "admin";
     final static String ADMIN_PASSWORD = "admin";
+    final static String ADMIN_EMAIL = "admin@admin.com";
+    
     
     static boolean authenticate(String username, String password) {
         if (User.count() == 0) {
@@ -17,6 +20,7 @@ public class Security extends Secure.Security {
                 User admin = new User();
                 admin.isAdmin = true;
                 admin.name = ADMIN_NAME;
+		admin.email = ADMIN_EMAIL;
                 admin.password = Codec.hexSHA1(ADMIN_PASSWORD);
                 admin.save();
                 return true;
@@ -44,6 +48,10 @@ public class Security extends Secure.Security {
         String username = connected();
         return User.find("byName", username).first();
     }
+    
+    public static String getCurrentUserEmail() {
+        return getCurrentUser().email;
+    }
 
     public static boolean isAuthorizedFor(models.Project project) {
         if (project == null) {
@@ -68,5 +76,15 @@ public class Security extends Secure.Security {
         }
 
         return isAuthorizedFor(file.release);
+    }
+    
+    static void onDisconnected() {
+	flash.keep();
+        Application.index();
+    }
+
+    static void onAuthenticated() {  
+	flash.keep();      
+        Project.index();
     }
 }

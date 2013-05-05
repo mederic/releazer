@@ -1,0 +1,12 @@
+#{extends 'main.html' /}
+#{set title:'My account' /}
+
+<h1>My account</h1>
+#{form @Application.updateAccount() }
+    <input type="text" name="email" placeholder="email" value="${user.email}" />
+    
+    <input type="password" name="password" />
+    <input type="password" name="repassword" />
+    
+    <input type="submit" name="save" value="Save changes" />
+#{/form}

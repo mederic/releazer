@@ -52,6 +52,8 @@ public class Project extends Controller {
 
         newRelease.save();
 
+	flash.success("Release succesfully created !");
+	flash.keep();
         Release.show(newRelease.id);
     }
 

@@ -50,6 +50,10 @@ public class Release extends Controller {
 		}
 
 		release.delete();
+		
+		flash.success("Release succesfully deleted !");
+		flash.keep();
+	
 		Project.show(projectId);
 	    } else {
 		notFound();
@@ -61,7 +65,12 @@ public class Release extends Controller {
 		} else {
 		    notFound();
 		}
+		
+		flash.success("Release succesfully deleted !");
+	    } else {		
+		flash.success("Release succesfully updated !");
 	    }
+	    flash.keep();
 
 	    if (name != null && !name.isEmpty()) {
 		release.name = name;
@@ -106,6 +115,7 @@ public class Release extends Controller {
 	    newFile.save();
 	}
 
+	flash.success("File succesfully added !");
 	show(release.id);
     }
 
@@ -122,6 +132,7 @@ public class Release extends Controller {
 	file.file.getFile().delete();
 	file.delete();
 
+	flash.success("File succesfully deleted !");
 	show(release.id);
     }
 
