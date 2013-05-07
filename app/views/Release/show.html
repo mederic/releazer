@@ -1,8 +1,6 @@
 #{extends 'main.html' /}
 #{set title: release.name /}
 
-#{if (release.isPublished || !currentUserRoleType.canEditPlannedRelease)}
-
 <aside id="breadcrumb">    
     <a href="@{Project.index()}">Projects</a> 
     <span class="separator">></span>
@@ -11,12 +9,16 @@
     <span class="current">${release.name}</span>
 </aside>
 
+#{if (release.isPublished || !currentUserRoleType.canEditPlannedRelease)}
+
+#{if (deviceType == controllers.DeviceHelper.DeviceType.STANDARD)}
 <aside class="qr-code">
     <img src="http://chart.apis.google.com/chart?cht=qr&chs=177x177&chl=@@{Release.show(release.id)}" alt="qrcode for this page" />
 </aside>
-
+#{/if}
+	
 <h1>${release.name}</h1>
-<span class="date">${release.date.format('dd/MM/yyyy')}</span>
+<span id="release-date" class="date">${release.date.format('dd/MM/yyyy')}</span>
 
 <h2>Release note</h2>
 <p>
@@ -29,14 +31,14 @@
 </p>
 
 <h2>Attached files</h2>
-<ul>
+<ul id="release-files-list">
     #{list release.attachedFiles, as:'file'}
     <li>
 	#{if ((file.type == models.File.FileType.IPA) && (deviceType == controllers.DeviceHelper.DeviceType.IOS))}
-	<a href="itms-services://?action=download-manifest&amp;url=${play.Play.configuration.getProperty("application.baseUrl")}@{Ipa.getIpaManifest(file.fileCode)}">Install ${file.name}</a>
+	<a href="itms-services://?action=download-manifest&amp;url=${play.Play.configuration.getProperty("application.baseUrl")}@{Ipa.getIpaManifest(file.fileCode)}" class="button">Install ${file.name}</a>
 	#{/if}
 	#{else}
-	<a href="@{Release.getFile(file.id, file.name)}">${file.name}</a>
+	<a href="@{Release.getFile(file.id, file.name)}" class="button">Download ${file.name}</a>
 	#{/else}
     </li>
     #{/list}
@@ -59,7 +61,7 @@
     #{/list}
 </ul>
 
-#{form @Release.addFile(release.id), enctype:'multipart/form-data'}
+#{form @Release.addFile(release.id), enctype:'multipart/form-data', id:'add-file-form'}
 <input type="file" name="file">
 <input type="submit" name="submit" value="Upload file">
 #{/form}

@@ -10,22 +10,22 @@
 <h1>${project.name}</h1>
 
 <h2>Last Releases</h2>
-<ul>
+<ul id="releases-list">
 #{list project.releases, as:'release'}
 	#{if (release.isPublished)}
 	<li>
-		<a href="@{Release.show(release.id)}">${release.name}</a>
+		<a href="@{Release.show(release.id)}" class="button">${release.name}</a>
 	</li>
 	#{/if}
 #{/list}
 </ul>
 
 <h2>Planned Releases</h2>
-<ul>
+<ul id="planned-releases-list">
 #{list project.releases, as:'release'}
 	#{if (!release.isPublished)}
 	<li>
-		<a href="@{Release.show(release.id)}">${release.name}</a>
+		<a href="@{Release.show(release.id)}" class="button">${release.name}</a>
 	</li>
 	#{/if}
 #{/list}

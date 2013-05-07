@@ -6,7 +6,7 @@ body {
     filter: dropshadow(color=#ccc, offx=1, offy=1);
 }
 header, section {
-    padding: 0 72px;
+    padding: 0 12px;
 }
 a, a:visited, a:active {
     text-decoration: none;
@@ -20,11 +20,12 @@ a:hover, a:focus {
 }
 h1, h2, h3 {
     font-family: 'Roboto Slab', serif;
+    text-align: center;
 }
 h1 {
     color: #666;
     font-size: 1.6em;
-    margin: 12px 0 4px;
+    margin: 12px 0;
 }
 h2 {
     color:  #ff9200;
@@ -35,6 +36,38 @@ h3 {
     color: #000;
     font-size: 1.1em;
     margin: 4px 0;
+}
+/* -------------------------- Button -------------------------- */
+a.button {
+	-moz-box-shadow:inset 0px 1px 0px 0px #fed897;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #fed897;
+	box-shadow:inset 0px 1px 0px 0px #fed897;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f6b33d), color-stop(1, #d29105) );
+	background:-moz-linear-gradient( center top, #f6b33d 5%, #d29105 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6b33d', endColorstr='#d29105');
+	background-color:#f6b33d;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #eda933;
+	display:inline-block;
+	color:#ffffff;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #cd8a15;
+}
+a.button:hover {
+	cursor: pointer;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #d29105), color-stop(1, #f6b33d) );
+	background:-moz-linear-gradient( center top, #d29105 5%, #f6b33d 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#d29105', endColorstr='#f6b33d');
+	background-color:#d29105;
+}
+a.button:active {
+	position:relative;
+	top:1px;
 }
 /* -------------------------- Header -------------------------- */
 header {
@@ -47,28 +80,41 @@ header {
     background: linear-gradient(to bottom,  #ffffff 0%,#e5e5e5 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
 
-    min-height: 56px;
+    height: 99px;
     overflow: hidden;
     border-bottom: 1px solid #ccc;
+    
+    position: fixed;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
 }
 header img#logo {
-    float: left;
     height: 40px;
     width: 161px;
-    margin: 8px 0;
+    margin: 8px;
 }
 header ul.action {
-    float: right;
-    margin: 8px 8px 0 0;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
 }
 header ul.action li {
     list-style-image: none;
     display: inline-block;
     vertical-align: middle;
-    margin: 6px 16px 0 0;
+    margin: auto;
+    padding: 8px;
 }
 header ul.action li.current-user {
     font-weight: bold;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0;
 }
 header ul.action li.current-user * {
     display: inline-block;
@@ -77,18 +123,19 @@ header ul.action li.current-user * {
 header ul.action li.current-user img {
     width: 28px;
     height: 28px;
-    margin-left: 6px;
 }
 /* -------------------------- Forms -------------------------- */
 input[type=text],
 input[type=password],
 textarea {
-    margin: 12px 0;
-    min-width: 192px;
+    margin: 12px auto;
+	width: 94%;
+	max-width: 338px;
     padding: 8px 6px;
     -webkit-border-radius: 4px;    
     border-radius: 4px;
     display: block;
+    font-size:16px;
 }
 p.error, p.success {    
     -webkit-border-radius: 6px;    
@@ -126,8 +173,59 @@ p.success {
 }
 /* -------------------------- Main section -------------------------- */
 section {
-    padding-top: 28px;
+	padding: 12px;
+    padding-top: 108px;
+    text-align: center;
+}
+#login {
+	width: 80%;
+	margin: auto;
 }
 aside.qr-code {
-    float: right;
+    margin: 18px auto;
+    height: 124px;
+    overflow: hidden;
+}
+aside.qr-code img {
+	margin: -24px;	
+}
+#release-date {
+	margin: -16px 0 6px 0;
+	font-style: italic;
+	color: #aaa;
+	font-size: 0.8em;
+	display: block;
+}
+/* -------------------------- Projects -------------------------- */
+#project-list,
+#releases-list,
+#planned-releases-list,
+#release-files-list {
+	padding : 0;
+	margin: 0;
+}
+#project-list li,
+#releases-list li,
+#planned-releases-list li,
+#release-files-list li {
+	list-style-type: none;
+	padding : 0;
+	margin: 0;
+	text-align: center;
+}
+#project-list li a,
+#releases-list li a,
+#planned-releases-list li a,
+#release-files-list li a {
+	list-style-type: none;
+	width: 80%;
+	max-width: 338px;
+	margin: 6px auto;
+}
+#add-file-form {	
+	padding : 0;
+	margin: 0;
+}
+#add-file-form input {
+	display: inline-block;
 }

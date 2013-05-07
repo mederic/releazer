@@ -2,10 +2,10 @@
 #{set title:'Projects' /}
 
 <h1>Your projects</h1>
-<ul>
+<ul id="project-list">
 #{list projects, as:'project'}
 	<li>
-		<a href="@{Project.show(project.getId())}">${project.name}</a>
+		<a href="@{Project.show(project.getId())}" class="button">${project.name}</a>
 	</li>
 #{/list}
 </ul>
