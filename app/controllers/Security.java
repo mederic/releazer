@@ -20,7 +20,7 @@ public class Security extends Secure.Security {
                 User admin = new User();
                 admin.isAdmin = true;
                 admin.name = ADMIN_NAME;
-		admin.email = ADMIN_EMAIL;
+                admin.email = ADMIN_EMAIL;
                 admin.password = Codec.hexSHA1(ADMIN_PASSWORD);
                 admin.save();
                 return true;

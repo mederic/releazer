@@ -28,10 +28,10 @@ public class User extends Model {
     @Required
     public boolean isAdmin;
     
-    @ManyToMany(cascade=CascadeType.ALL) 
+    @ManyToMany
     public Set<Project> attachedProjects = new HashSet<Project>(); 
 
-    @OneToMany(mappedBy="user") 
+    @OneToMany(mappedBy="user", cascade=CascadeType.ALL) 
     public Set<Role> attachedRoles;
     
     @Override

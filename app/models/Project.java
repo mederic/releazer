@@ -17,7 +17,7 @@ public class Project extends Model {
 	@Required
     public String name;
     
-    @ManyToMany(mappedBy="attachedProjects") 
+    @ManyToMany(mappedBy="attachedProjects", cascade=CascadeType.ALL) 
     public Set<User> attachedUsers; 
 
     @OneToMany(mappedBy="project", cascade=CascadeType.ALL)
@@ -26,5 +26,23 @@ public class Project extends Model {
     @Override
     public String toString() {
     	return "[" + this.getId() + "] " + name;
+    }
+
+    public boolean hasPublishedRelease() {
+    	boolean result = false;
+    	for (Release release : releases) {
+    		if (release.isPublished) 
+    			return true;
+    	}
+    	return result;
+    }
+    
+    public boolean hasPlannedRelease() {
+    	boolean result = false;
+    	for (Release release : releases) {
+    		if (!release.isPublished) 
+    			return true;
+    	}
+    	return result;
     }
 }

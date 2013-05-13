@@ -21,22 +21,19 @@ public class RoleType extends Model {
     public String name;
 
 	@Required
-    public boolean canAddPlannedRelease;
+    public boolean canCreatePlannedRelease;
 
 	@Required
-    public boolean canSeePlannedRelease;
+    public boolean canReadPlannedRelease;
 	
 	@Required
-    public boolean canEditPlannedRelease;
+    public boolean canWritePlannedRelease;
 
 	@Required
     public boolean canDeletePlannedRelease;
 	
 	@Required
     public boolean canPublishPlannedRelease;
-	
-	@Required
-    public boolean canGetReleaseFile;
 
 	@Required
     public boolean isNotifyWhenReleased;

@@ -1,6 +1,8 @@
 package models;
 
 import java.util.HashMap;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 

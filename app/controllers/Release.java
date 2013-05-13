@@ -25,7 +25,7 @@ public class Release extends Controller {
 	User currentUser = Security.getCurrentUser();
 	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-	if (!Security.isAuthorizedFor(release) || (!release.isPublished && !currentUserRoleType.canSeePlannedRelease)) {
+	if (!Security.isAuthorizedFor(release) || (!release.isPublished && !currentUserRoleType.canReadPlannedRelease)) {
 	    notFound();
 	}
 
@@ -37,18 +37,14 @@ public class Release extends Controller {
 	User currentUser = Security.getCurrentUser();
 	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canEditPlannedRelease)) {
+	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canWritePlannedRelease)) {
 	    notFound();
 	}
 
 	if ("delete".equalsIgnoreCase(action)) {
 	    if (currentUserRoleType.canDeletePlannedRelease) {
 		long projectId = release.project.id;
-
-		for (File file : release.attachedFiles) {
-		    file.delete();
-		}
-
+		
 		release.delete();
 		
 		flash.success("Release succesfully deleted !");
@@ -89,7 +85,7 @@ public class Release extends Controller {
 	User currentUser = Security.getCurrentUser();
 	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canEditPlannedRelease)) {
+	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canWritePlannedRelease)) {
 	    notFound();
 	}
 
@@ -125,7 +121,7 @@ public class Release extends Controller {
 	User currentUser = Security.getCurrentUser();
 	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canEditPlannedRelease)) {
+	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canWritePlannedRelease)) {
 	    notFound();
 	}
 
@@ -142,7 +138,7 @@ public class Release extends Controller {
 	User currentUser = Security.getCurrentUser();
 	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-	if (!Security.isAuthorizedFor(file) || !file.name.equals(filename) || !currentUserRoleType.canGetReleaseFile) {
+	if (!Security.isAuthorizedFor(file) || !file.name.equals(filename)) {
 	    notFound();
 	}
 

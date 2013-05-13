@@ -11,6 +11,10 @@
 
 <h2>Last Releases</h2>
 <ul id="releases-list">
+#{if (!project.hasPublishedRelease())}
+	<em>There is not any release for this project for now...</em>
+#{/if}
+
 #{list project.releases, as:'release'}
 	#{if (release.isPublished)}
 	<li>
@@ -18,10 +22,16 @@
 	</li>
 	#{/if}
 #{/list}
+
 </ul>
 
 <h2>Planned Releases</h2>
 <ul id="planned-releases-list">
+
+#{if (!project.hasPlannedRelease())}
+	<em>There is not any planned release for this project for now...</em>
+#{/if}
+
 #{list project.releases, as:'release'}
 	#{if (!release.isPublished)}
 	<li>
@@ -31,7 +41,7 @@
 #{/list}
 </ul>
 
-#{if (currentUserRoleType.canAddPlannedRelease)}
+#{if (currentUserRoleType.canCreatePlannedRelease)}
 
 	#{form @Project.newRelease(project.id)}
 		<input type="text" name="releaseName" placeholder="New release name..." />

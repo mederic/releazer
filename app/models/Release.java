@@ -34,7 +34,7 @@ public class Release extends Model {
     @Lob
     public String note;
 
-    @OneToMany(mappedBy="release")
+    @OneToMany(mappedBy="release", cascade=CascadeType.ALL)
     public Set<File> attachedFiles;
 
     @Override

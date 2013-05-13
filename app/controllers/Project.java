@@ -35,7 +35,7 @@ public class Project extends Controller {
 
         RoleType currentUserRoleType = currentUser.getRoleTypeFor(project);
 
-        if (!Security.isAuthorizedFor(project) || !currentUserRoleType.canAddPlannedRelease) {
+        if (!Security.isAuthorizedFor(project) || !currentUserRoleType.canCreatePlannedRelease) {
             notFound();
         }
 

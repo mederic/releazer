@@ -25,17 +25,17 @@ h1, h2, h3 {
 h1 {
     color: #666;
     font-size: 1.6em;
-    margin: 12px 0;
+    margin: 26px 0;
 }
 h2 {
     color:  #ff9200;
     font-size: 1.3em;
-    margin: 8px 0;
+    margin: 20px 0;
 }
 h3 {
     color: #000;
     font-size: 1.1em;
-    margin: 4px 0;
+    margin: 16px 0;
 }
 /* -------------------------- Button -------------------------- */
 a.button {
@@ -136,6 +136,13 @@ textarea {
     border-radius: 4px;
     display: block;
     font-size:16px;
+}
+textarea {
+	min-height: 256px;
+}
+label {
+	margin: 20px 0 0 0;
+	display: block;
 }
 p.error, p.success {    
     -webkit-border-radius: 6px;    
