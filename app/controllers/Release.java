@@ -20,130 +20,131 @@ import play.mvc.With;
 @With({Secure.class, DeviceHelper.class})
 public class Release extends Controller {
 
-    public static void show(long id) {
-	models.Release release = models.Release.findById(id);
-	User currentUser = Security.getCurrentUser();
-	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
+	public static void show(long id) {
+		models.Release release = models.Release.findById(id);
+		User currentUser = Security.getCurrentUser();
+		RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-	if (!Security.isAuthorizedFor(release) || (!release.isPublished && !currentUserRoleType.canReadPlannedRelease)) {
-	    notFound();
+		if (!Security.isAuthorizedFor(release) || (!release.isPublished && !currentUserRoleType.canReadPlannedRelease)) {
+			notFound();
+		}
+
+		render(release, currentUserRoleType);
 	}
 
-	render(release, currentUserRoleType);
-    }
+	public static void edit(long id, String name, Date date, String note, String action) {
+		models.Release release = models.Release.findById(id);
+		User currentUser = Security.getCurrentUser();
+		RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-    public static void edit(long id, String name, Date date, String note, String action) {
-	models.Release release = models.Release.findById(id);
-	User currentUser = Security.getCurrentUser();
-	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
+		if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canWritePlannedRelease)) {
+			notFound();
+		}
 
-	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canWritePlannedRelease)) {
-	    notFound();
-	}
+		if ("delete".equalsIgnoreCase(action)) {
+			if (currentUserRoleType.canDeletePlannedRelease) {
+				long projectId = release.project.id;
 
-	if ("delete".equalsIgnoreCase(action)) {
-	    if (currentUserRoleType.canDeletePlannedRelease) {
-		long projectId = release.project.id;
-		
-		release.delete();
-		
-		flash.success("Release succesfully deleted !");
-		flash.keep();
-	
-		Project.show(projectId);
-	    } else {
-		notFound();
-	    }
-	} else {
-	    if ("publish".equalsIgnoreCase(action)) {
-		if (currentUserRoleType.canPublishPlannedRelease) {
-		    release.isPublished = true;
+				release.delete();
+
+				flash.success("Release succesfully deleted !");
+				flash.keep();
+
+				Project.show(projectId);
+			} else {
+				notFound();
+			}
 		} else {
-		    notFound();
+			if ("publish".equalsIgnoreCase(action)) {
+				if (currentUserRoleType.canPublishPlannedRelease) {
+					release.isPublished = true;
+				} else {
+					notFound();
+				}
+
+				flash.success("Release succesfully deleted !");
+			} else {		
+				flash.success("Release succesfully updated !");
+			}
+			flash.keep();
+
+			if (name != null && !name.isEmpty()) {
+				release.name = name;
+			}
+
+			release.date = date;
+			release.note = note;
+
+			release.save();
 		}
-		
-		flash.success("Release succesfully deleted !");
-	    } else {		
-		flash.success("Release succesfully updated !");
-	    }
-	    flash.keep();
-
-	    if (name != null && !name.isEmpty()) {
-		release.name = name;
-	    }
-
-	    release.date = date;
-	    release.note = note;
-
-	    release.save();
-	}
-	show(release.id);
-    }
-
-    public static void addFile(long id, java.io.File file) throws FileNotFoundException, Exception {
-	models.Release release = models.Release.findById(id);
-	User currentUser = Security.getCurrentUser();
-	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
-
-	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canWritePlannedRelease)) {
-	    notFound();
+		show(release.id);
 	}
 
-	if (file != null) {
-	    File newFile = new models.File();
-	    newFile.release = release;
-	    newFile.name = file.getName();
-	    newFile.file = new Blob();
-	    newFile.file.set(new FileInputStream(file), MimeTypes.getContentType(file.getName()));
+	public static void addFile(long id, java.io.File file) throws FileNotFoundException, Exception {
+		models.Release release = models.Release.findById(id);
+		User currentUser = Security.getCurrentUser();
+		RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-	    newFile.type = FileType.STANDARD;
-
-	    int lastPointIndex = file.getName().lastIndexOf(".");
-	    if (lastPointIndex != -1) {
-		if ("ipa".equalsIgnoreCase(file.getName().substring(lastPointIndex + 1))) {
-		    HashMap<String, String> ipaMetadata = Ipa.getDataFromIpa(file);
-		    // ipa, we need more data...
-		    newFile.type = FileType.IPA;
-		    newFile.fileCode = Codec.hexSHA1(file.getName());
-		    newFile.metadata = ipaMetadata;
+		if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canWritePlannedRelease)) {
+			notFound();
 		}
-	    }
-	    newFile.save();
+
+		if (file != null) {
+
+			File newFile = new models.File();
+			newFile.release = release;
+			newFile.name = file.getName();
+			newFile.file = new Blob();
+			newFile.file.set(new FileInputStream(file), MimeTypes.getContentType(file.getName()));
+
+			newFile.type = FileType.STANDARD;
+
+			int lastPointIndex = file.getName().lastIndexOf(".");
+			if (lastPointIndex != -1) {
+				if ("ipa".equalsIgnoreCase(file.getName().substring(lastPointIndex + 1))) {
+					HashMap<String, String> ipaMetadata = Ipa.getDataFromIpa(file);
+					// ipa, we need more data...
+					newFile.type = FileType.IPA;
+					newFile.fileCode = Codec.hexSHA1(file.getName());
+					newFile.metadata = ipaMetadata;
+				}
+			}
+			newFile.save();
+		}
+
+		flash.success("File succesfully added !");
+		show(release.id);
 	}
 
-	flash.success("File succesfully added !");
-	show(release.id);
-    }
+	public static void deleteFile(long id) {
+		final models.File file = models.File.findById(id);
+		models.Release release = file.release;
+		User currentUser = Security.getCurrentUser();
+		RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-    public static void deleteFile(long id) {
-	final models.File file = models.File.findById(id);
-	models.Release release = file.release;
-	User currentUser = Security.getCurrentUser();
-	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
+		if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canWritePlannedRelease)) {
+			notFound();
+		}
 
-	if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canWritePlannedRelease)) {
-	    notFound();
+		file.file.getFile().delete();
+		file.delete();
+
+		flash.success("File succesfully deleted !");
+		show(release.id);
 	}
 
-	file.file.getFile().delete();
-	file.delete();
+	public static void getFile(long id, String filename) {
+		final models.File file = models.File.findById(id);
+		models.Release release = file.release;
+		User currentUser = Security.getCurrentUser();
+		RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
 
-	flash.success("File succesfully deleted !");
-	show(release.id);
-    }
+		if (!Security.isAuthorizedFor(file) || !file.name.equals(filename)) {
+			notFound();
+		}
 
-    public static void getFile(long id, String filename) {
-	final models.File file = models.File.findById(id);
-	models.Release release = file.release;
-	User currentUser = Security.getCurrentUser();
-	RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
-
-	if (!Security.isAuthorizedFor(file) || !file.name.equals(filename)) {
-	    notFound();
+		notFoundIfNull(file);
+		response.setContentTypeIfNotSet(file.file.type());
+		renderBinary(file.file.get());
 	}
-
-	notFoundIfNull(file);
-	response.setContentTypeIfNotSet(file.file.type());
-	renderBinary(file.file.get());
-    }
 }
