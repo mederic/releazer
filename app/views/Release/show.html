@@ -59,10 +59,6 @@
 
 <label for="name">Release name</label>
 <input type="text" name="name" value="${release.name}" placeholder="Release name..."/>
-	
-
-<label for="note">Release note</label>
-<textarea name="note" placeholder="Release note...">${release.note}</textarea>
 
 <h3>Files</h3>
 <ul>    
@@ -88,6 +84,10 @@
 #{/form}
 
 #{form @Release.edit(release.id)}
+
+<label for="note">Release note</label>
+<textarea name="note" placeholder="Release note...">${release.note}</textarea>
+
 <input type="hidden" name="date" value="${new Date().format('yyyy-MM-dd')}" />	
 	
 #{if (currentUserRoleType.canDeletePlannedRelease)}
