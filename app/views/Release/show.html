@@ -57,38 +57,15 @@
 
 <h3>Informations</h3>
 
+#{form @Release.edit(release.id)}
+
 <label for="name">Release name</label>
 <input type="text" name="name" value="${release.name}" placeholder="Release name..."/>
 
-<h3>Files</h3>
-<ul>    
-    #{list release.attachedFiles, as:'file'}
-    <li>
-	<span class="file-name">${file.name}</span>
-	#{form @Release.deleteFile(file.id)}
-	<input type="submit" value="delete" />
-	#{/form}
-    </li>
-    #{/list}
-</ul>
-
-#{if (release.attachedFiles.isEmpty())}	    
-	<p>
-		<em>There's no any file attached to this release for now...</em>
-	</p>
-#{/if}
-    
-#{form @Release.addFile(release.id), enctype:'multipart/form-data', id:'add-file-form'}
-<input type="file" name="file">
-<input type="submit" name="submit" value="Upload file">
-#{/form}
-
-#{form @Release.edit(release.id)}
-
 <label for="note">Release note</label>
 <textarea name="note" placeholder="Release note...">${release.note}</textarea>
-<input type="hidden" name="date" value="${new Date().format('yyyy-MM-dd')}" />	
-	
+<input type="hidden" name="date" value="${new Date().format('yyyy-MM-dd')}" />
+
 #{if (currentUserRoleType.canDeletePlannedRelease)}
 <input type="submit" name="action" value="delete" />
 #{/if}
@@ -98,6 +75,29 @@
 #{if (currentUserRoleType.canPublishPlannedRelease)}
 <input type="submit" name="action" value="publish" />
 #{/if}
+#{/form}
+
+<h3>Files</h3>
+<ul>
+    #{list release.attachedFiles, as:'file'}
+    <li>
+        <span class="file-name">${file.name}</span>
+        #{form @Release.deleteFile(file.id)}
+        <input type="submit" value="delete" />
+        #{/form}
+    </li>
+    #{/list}
+</ul>
+
+#{if (release.attachedFiles.isEmpty())}
+        <p>
+                <em>There's no any file attached to this release for now...</em>
+        </p>
+#{/if}
+
+#{form @Release.addFile(release.id), enctype:'multipart/form-data', id:'add-file-form'}
+<input type="file" name="file">
+<input type="submit" name="submit" value="Upload file">
 #{/form}
 
 #{/else}
