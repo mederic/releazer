@@ -25,21 +25,23 @@
 
 </ul>
 
+#{if (currentUserRoleType.canReadPlannedRelease)}
 <h2>Planned Releases</h2>
 <ul id="planned-releases-list">
 
 #{if (!project.hasPlannedRelease())}
-	<em>There is not any planned release for this project for now...</em>
+        <em>There is not any planned release for this project for now...</em>
 #{/if}
 
 #{list project.releases, as:'release'}
-	#{if (!release.isPublished)}
-	<li>
-		<a href="@{Release.show(release.id)}" class="button">${release.name}</a>
-	</li>
-	#{/if}
+        #{if (!release.isPublished)}
+        <li>
+                <a href="@{Release.show(release.id)}" class="button">${release.name}</a>
+        </li>
+        #{/if}
 #{/list}
 </ul>
+#{/if}
 
 #{if (currentUserRoleType.canCreatePlannedRelease)}
 

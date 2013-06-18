@@ -87,7 +87,6 @@
 
 <label for="note">Release note</label>
 <textarea name="note" placeholder="Release note...">${release.note}</textarea>
-
 <input type="hidden" name="date" value="${new Date().format('yyyy-MM-dd')}" />	
 	
 #{if (currentUserRoleType.canDeletePlannedRelease)}
