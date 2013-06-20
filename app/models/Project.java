@@ -1,6 +1,11 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,7 +17,7 @@ import play.data.validation.Required;
 import play.db.jpa.Model;
 
 @Entity
-public class Project extends Model {
+public class Project extends Model implements Comparator<Release> {
     
 	@Required
     public String name;
@@ -28,6 +33,12 @@ public class Project extends Model {
     	return "[" + this.getId() + "] " + name;
     }
 
+    public List<Release> getOrderedReleases() {
+    	List<Release> result = new ArrayList<Release>(this.releases);
+    	Collections.sort(result, this);
+    	return result;
+    }    
+    
     public boolean hasPublishedRelease() {
     	boolean result = false;
     	for (Release release : releases) {
@@ -45,4 +56,9 @@ public class Project extends Model {
     	}
     	return result;
     }
+
+	@Override
+	public int compare(Release o1, Release o2) {
+		return o2.date.compareTo(o1.date);
+	}
 }

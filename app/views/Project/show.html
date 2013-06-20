@@ -15,10 +15,13 @@
 	<em>There is not any release for this project for now...</em>
 #{/if}
 
-#{list project.releases, as:'release'}
-	#{if (release.isPublished)}
+#{list project.getOrderedReleases(), as:'release'}
+	#{if (release.isPublished && !release.isArchived)}
 	<li>
-		<a href="@{Release.show(release.id)}" class="button">${release.name}</a>
+		<a href="@{Release.show(release.id)}" class="button">
+			<span class="release-name">${release.name}</span>
+			<span class="release-date">${release.date.format('dd/MM/yyyy - HH:mm')}</span>
+		</a>
 	</li>
 	#{/if}
 #{/list}

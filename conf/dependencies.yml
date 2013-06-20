@@ -6,4 +6,5 @@ require:
     - play -> crud     
     - play -> gravatar 1.0.2
     - com.googlecode.plist -> dd-plist 1.0
+    - org.xerial -> sqlite-jdbc 3.7.2
 

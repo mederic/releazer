@@ -1,6 +1,7 @@
 package models;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -38,5 +39,10 @@ public class File extends Model {
     @Override
     public String toString() {
     	return "[" + this.getId() + "] " + name;
+    }
+    
+    public List<IpaStat> getStatistics() {
+    	List<IpaStat> result = IpaStat.find("file = ? order by date desc", this).fetch();    	
+    	return result;
     }
 }

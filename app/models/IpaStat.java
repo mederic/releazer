@@ -15,34 +15,24 @@ import play.db.jpa.Blob;
 import play.db.jpa.Model;
 
 @Entity
-public class RoleType extends Model {	
+public class IpaStat extends Model {
 
 	@Required
-    public String name;
-
-	@Required
-    public boolean canCreatePlannedRelease;
-
-	@Required
-    public boolean canReadPlannedRelease;
+    @ManyToOne(cascade=CascadeType.ALL)
+    public User user;
 	
 	@Required
-    public boolean canWritePlannedRelease;
-
-	@Required
-    public boolean canDeletePlannedRelease;
+    @ManyToOne(cascade=CascadeType.ALL)
+    public File file;
 	
 	@Required
-    public boolean canPublishPlannedRelease;
+    public String userAgent;
 
 	@Required
-    public boolean canReadReleaseStats;
-	
-	@Required
-    public boolean isNotifyWhenReleased;
+    public Date date;
 	
     @Override
     public String toString() {
-    	return "[" + this.getId() + "] " + name;
+    	return "[" + this.getId() + "] " + user.name + " : " + file.name + ". Time : " + date.getTime();
     }
 }

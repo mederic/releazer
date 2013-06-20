@@ -11,6 +11,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import play.data.binding.As;
 import play.data.validation.Required;
 import play.db.jpa.Blob;
 import play.db.jpa.Model;
@@ -31,12 +32,14 @@ public class Release extends Model {
     @Required
     public Date date;
 
-    @Lob
     public String note;
 
     @OneToMany(mappedBy="release", cascade=CascadeType.ALL)
     public Set<File> attachedFiles;
 
+    @Required
+    public boolean isArchived; 
+    
     @Override
     public String toString() {
     	return "[" + this.getId() + "] (" + project.name + ") "+ name;

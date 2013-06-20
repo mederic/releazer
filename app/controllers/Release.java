@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -32,7 +33,8 @@ public class Release extends Controller {
 		render(release, currentUserRoleType);
 	}
 
-	public static void edit(long id, String name, Date date, String note, String action) {
+	public static void edit(long id, String name, String note, String action) {
+		Date date = new Date();
 		models.Release release = models.Release.findById(id);
 		User currentUser = Security.getCurrentUser();
 		RoleType currentUserRoleType = currentUser.getRoleTypeFor(release.project);
@@ -104,8 +106,9 @@ public class Release extends Controller {
 				if ("ipa".equalsIgnoreCase(file.getName().substring(lastPointIndex + 1))) {
 					HashMap<String, String> ipaMetadata = Ipa.getDataFromIpa(file);
 					// ipa, we need more data...
+	                
 					newFile.type = FileType.IPA;
-					newFile.fileCode = Codec.hexSHA1(file.getName());
+					newFile.fileCode = Codec.hexSHA1(new Date().getTime() + file.getName());
 					newFile.metadata = ipaMetadata;
 				}
 			}

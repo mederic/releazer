@@ -38,7 +38,8 @@ h3 {
     margin: 16px 0;
 }
 /* -------------------------- Button -------------------------- */
-a.button {
+a.button,
+.button {
 	-moz-box-shadow:inset 0px 1px 0px 0px #fed897;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #fed897;
 	box-shadow:inset 0px 1px 0px 0px #fed897;
@@ -58,14 +59,14 @@ a.button {
 	text-decoration:none;
 	text-shadow:1px 1px 0px #cd8a15;
 }
-a.button:hover {
+.button:hover {
 	cursor: pointer;
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #d29105), color-stop(1, #f6b33d) );
 	background:-moz-linear-gradient( center top, #d29105 5%, #f6b33d 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#d29105', endColorstr='#f6b33d');
 	background-color:#d29105;
 }
-a.button:active {
+.button:active {
 	position:relative;
 	top:1px;
 }
@@ -206,8 +207,7 @@ aside.qr-code img {
 /* -------------------------- Projects -------------------------- */
 #project-list,
 #releases-list,
-#planned-releases-list,
-#release-files-list {
+#planned-releases-list {
 	padding : 0;
 	margin: 0;
 }
@@ -222,8 +222,7 @@ aside.qr-code img {
 }
 #project-list li a,
 #releases-list li a,
-#planned-releases-list li a,
-#release-files-list li a {
+#planned-releases-list li a {
 	list-style-type: none;
 	width: 80%;
 	max-width: 338px;
@@ -235,4 +234,67 @@ aside.qr-code img {
 }
 #add-file-form input {
 	display: inline-block;
+}
+
+/* -------------------------- Project -------------------------- */
+#releases-list li a .release-name,
+#releases-list li a .release-date {
+	display: inline-block;
+	vertical-align: bottom;
+}
+#releases-list li a .release-name {
+	float: left;
+}
+#releases-list li a .release-date {
+	float: right;
+	padding-top: 4px;
+	font-size: 10px;
+	font-style: italic;
+	color: #eee;
+}
+/* -------------------------- Release -------------------------- */
+#release-files-list,
+#ipa-stats {	
+	max-width: 338px;
+	margin: 8px auto 16px auto;
+	padding: 0;
+	font-size: 12px;
+}
+#release-files-list li,
+#ipa-stats li {
+	list-style-type: none;
+	overflow: hidden;
+	text-align: right;
+	margin: 4px 0;
+}
+#release-files-list li .filename {
+	float: left;
+	padding-top: 4px;
+}
+#release-files-list li form
+{
+	display: inline-block;
+}
+#release-files-list li a,
+#release-files-list li input[type=submit] {	
+	display: inline-block;
+	margin: 0 2px;
+	padding: 4px 6px;
+}
+#ipa-stats li .date {
+	float: left;
+	width: 50%;
+	padding-top: 4px;
+	text-align: left;
+}
+#ipa-stats li .user {
+	float: right;
+	width: 50%;
+	padding-top: 4px;
+}
+#ipa-stats li .user-agent {
+	padding-top: 4px;
+	text-align: center;
+	color: #666;
+	margin-bottom: 12px;
 }

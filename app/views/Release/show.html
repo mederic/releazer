@@ -9,16 +9,16 @@
     <span class="current">${release.name}</span>
 </aside>
 
-#{if (release.isPublished || !currentUserRoleType.canWritePlannedRelease)}
-
 #{if (deviceType == controllers.DeviceHelper.DeviceType.STANDARD)}
 <aside class="qr-code">
     <img src="http://chart.apis.google.com/chart?cht=qr&chs=177x177&chl=@@{Release.show(release.id)}" alt="qrcode for this page" />
 </aside>
 #{/if}
+
+#{if (release.isPublished || !currentUserRoleType.canWritePlannedRelease)}
 	
 <h1>${release.name}</h1>
-<span id="release-date" class="date">${release.date.format('dd/MM/yyyy')}</span>
+<span id="release-date" class="date">${release.date.format('dd/MM/yyyy HH:mm')}</span>
 
 <h2>Release note</h2>
 <p>
@@ -30,30 +30,38 @@
     #{/else}
 </p>
 
-<h2>Attached files</h2>
+#{if (currentUserRoleType.canReadReleaseStats)}
+	<h2>Statistics</h2>
 	
-#{if (release.attachedFiles.isEmpty())}	    
-    <em>There's no any file attached to this release...</em>
-#{/if}
-    
-<ul id="release-files-list">
-    #{list release.attachedFiles, as:'file'}
-    <li>
-	#{if ((file.type == models.File.FileType.IPA) && (deviceType == controllers.DeviceHelper.DeviceType.IOS))}
-	<a href="itms-services://?action=download-manifest&amp;url=${play.Play.configuration.getProperty("application.baseUrl")}@{Ipa.getIpaManifest(file.fileCode)}" class="button">Install ${file.name}</a>
+	#{if (release.attachedFiles.isEmpty())}
+	    <em>There's no any file attached for statistics...</em>
 	#{/if}
 	#{else}
-	<a href="@{Release.getFile(file.id, file.name)}" class="button">Download ${file.name}</a>
+		#{list release.attachedFiles, as:'file'}
+			<h3>${file.name}</h3>
+			#{if (file.type == models.File.FileType.IPA)}
+				<ul id="ipa-stats">					
+					#{list file.getStatistics(), as:'stat'}
+						<li>
+							<span class="date">${stat.date.format('dd/MM/yyyy HH:mm')}</span>
+							<span class="user">${stat.user.name}</span>
+							<div class="user-agent">${stat.userAgent}</div>
+						</li>
+					#{/list}
+				</ul>
+			#{/if}
+			#{else}
+				<em>No statistics for this kind of file...</em>
+			#{/else}
+		#{/list}
 	#{/else}
-    </li>
-    #{/list}
-</ul>
+#{/if}
 
 #{/if}
 #{else}
 
 <h2>Edition mode</h2>
-<span class="date">Last edit : ${release.date.format('dd/MM/yyyy')}</span>
+<span class="date">Last edit : ${release.date.format('dd/MM/yyyy HH:mm')}</span>
 
 <h3>Informations</h3>
 
@@ -64,7 +72,6 @@
 
 <label for="note">Release note</label>
 <textarea name="note" placeholder="Release note...">${release.note}</textarea>
-<input type="hidden" name="date" value="${new Date().format('yyyy-MM-dd')}" />
 
 #{if (currentUserRoleType.canDeletePlannedRelease)}
 <input type="submit" name="action" value="delete" />
@@ -77,27 +84,39 @@
 #{/if}
 #{/form}
 
-<h3>Files</h3>
-<ul>
+#{/else}
+
+
+<h2>Attached files</h2>
+	
+#{if (release.attachedFiles.isEmpty())}
+    <em>There's no any file attached to this release...</em>
+#{/if}
+    
+<ul id="release-files-list" class="uploaded-files">
     #{list release.attachedFiles, as:'file'}
     <li>
-        <span class="file-name">${file.name}</span>
-        #{form @Release.deleteFile(file.id)}
-        <input type="submit" value="delete" />
-        #{/form}
+   		<span class="filename">${file.name}</span>
+   		
+		#{if ((file.type == models.File.FileType.IPA) && (deviceType == controllers.DeviceHelper.DeviceType.IOS))}
+			<a href="itms-services://?action=download-manifest&amp;url=${play.Play.configuration.getProperty("application.baseUrl")}@{Ipa.getIpaManifest(file.fileCode, controllers.Security.getCurrentUser().id)}" class="button stat-target">Install</a>
+		#{/if}
+		#{else}
+			<a href="@{Release.getFile(file.id, file.name)}" class="button">Download</a>
+		#{/else}
+		
+		#{if (!release.isPublished && currentUserRoleType.canWritePlannedRelease)}
+			#{form @Release.deleteFile(file.id)}
+	        	<input class="button" type="submit" value="delete" />
+	        #{/form}
+		#{/if}	
     </li>
     #{/list}
 </ul>
 
-#{if (release.attachedFiles.isEmpty())}
-        <p>
-                <em>There's no any file attached to this release for now...</em>
-        </p>
+#{if (!release.isPublished && currentUserRoleType.canWritePlannedRelease)}
+	#{form @Release.addFile(release.id), enctype:'multipart/form-data', id:'add-file-form'}
+		<input type="file" name="file">
+		<input type="submit" name="submit" value="Upload file">
+	#{/form}
 #{/if}
-
-#{form @Release.addFile(release.id), enctype:'multipart/form-data', id:'add-file-form'}
-<input type="file" name="file">
-<input type="submit" name="submit" value="Upload file">
-#{/form}
-
-#{/else}

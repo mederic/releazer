@@ -4,11 +4,15 @@ import com.dd.plist.NSDictionary;
 import com.dd.plist.PropertyListParser;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+
+import models.IpaStat;
+import models.User;
 
 import play.libs.IO;
 import play.libs.XML;
@@ -24,9 +28,23 @@ public class Ipa extends Controller {
         renderBinary(file.file.get());
     }
 
-    public static void getIpaManifest(String fileCode) {
+    public static void getIpaManifest(String fileCode, long userId) {
         final models.File file = models.File.find("byFileCode", fileCode).first();
 
+        User user = User.findById(userId);
+        if (user != null)
+        {
+        	String userAgent = request.headers.get("user-agent").value();
+        	IpaStat stats = new IpaStat();
+        	stats.user = user;
+        	stats.file = file;
+        	stats.date = new Date();
+        	stats.userAgent = userAgent;
+        	
+        	stats.save();
+        }
+    	
+    	
         String textResponse = "";
         textResponse += "<plist version=\"1.0\">";
         textResponse += "<dict>";
@@ -80,18 +98,19 @@ public class Ipa extends Controller {
             InputStream input = null;
             while (entries.hasMoreElements()) {
                 ZipEntry zipEntry = entries.nextElement();
-                if (zipEntry.getName().endsWith("Info.plist")) {
+                if (zipEntry.getName().endsWith("app/Info.plist")) {
                     input = ipaZipFile.getInputStream(zipEntry);
                     break;
                 }
             }
 
+            
             if (input != null) {
                 NSDictionary rootDict = (NSDictionary) PropertyListParser.parse(input);
                 result.put("bundle-identifier", rootDict.objectForKey("CFBundleIdentifier").toString());
                 result.put("bundle-version", rootDict.objectForKey("CFBundleVersion").toString());
                 result.put("kind", "software");
-                result.put("title", rootDict.objectForKey("CFBundleName").toString());
+                result.put("title", rootDict.objectForKey("CFBundleName").toString());                
             }
 
         } catch (ZipException e) {
