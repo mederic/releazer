@@ -15,7 +15,7 @@ import play.db.jpa.Blob;
 import play.db.jpa.Model;
 
 @Entity
-public class IpaStat extends Model {
+public class FileStat extends Model {
 
 	@Required
     @ManyToOne(cascade=CascadeType.ALL)

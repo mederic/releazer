@@ -10,11 +10,10 @@ import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+import models.FileStat;
 
-import models.IpaStat;
 import models.User;
 
-import play.libs.IO;
 import play.libs.XML;
 import play.mvc.Controller;
 
@@ -31,19 +30,7 @@ public class Ipa extends Controller {
     public static void getIpaManifest(String fileCode, long userId) {
         final models.File file = models.File.find("byFileCode", fileCode).first();
 
-        User user = User.findById(userId);
-        if (user != null)
-        {
-        	String userAgent = request.headers.get("user-agent").value();
-        	IpaStat stats = new IpaStat();
-        	stats.user = user;
-        	stats.file = file;
-        	stats.date = new Date();
-        	stats.userAgent = userAgent;
-        	
-        	stats.save();
-        }
-    	
+        file.addStatEntryByUserId(userId, request);
     	
         String textResponse = "";
         textResponse += "<plist version=\"1.0\">";

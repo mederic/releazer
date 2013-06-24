@@ -8,6 +8,6 @@ import controllers.Secure;
 
 @With(Secure.class)
 @Check("isAdmin")
-public class IpaStats extends CRUD {
+public class FileStats extends CRUD {
 
 }

@@ -147,6 +147,9 @@ public class Release extends Controller {
 		}
 
 		notFoundIfNull(file);
+                
+                file.addStatEntrybyUser(currentUser, request);
+        
 		response.setContentTypeIfNotSet(file.file.type());
 		renderBinary(file.file.get());
 	}
