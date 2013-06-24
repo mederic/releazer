@@ -18,15 +18,15 @@ import play.db.jpa.Model;
 public class Role extends Model {
 
 	@Required
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne
     public User user;
 	
 	@Required
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne
     public RoleType role;
 	
 	@Required
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne
     public Project project;
 
     @Override

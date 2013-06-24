@@ -18,11 +18,11 @@ import play.db.jpa.Model;
 public class FileStat extends Model {
 
 	@Required
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne
     public User user;
 	
 	@Required
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne
     public File file;
 	
 	@Required

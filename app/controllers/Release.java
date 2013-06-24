@@ -5,9 +5,12 @@ import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import models.File;
 import models.File.FileType;
+import models.FileStat;
+import models.IpaFileToken;
 import models.RoleType;
 import models.User;
 
@@ -127,8 +130,8 @@ public class Release extends Controller {
 		if (!Security.isAuthorizedFor(release) || (!currentUserRoleType.canWritePlannedRelease)) {
 			notFound();
 		}
-
-		file.file.getFile().delete();
+             
+                file.file.getFile().delete();
 		file.delete();
 
 		flash.success("File succesfully deleted !");

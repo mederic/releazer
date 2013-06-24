@@ -22,11 +22,14 @@ public class Project extends Model implements Comparator<Release> {
 	@Required
     public String name;
     
-    @ManyToMany(mappedBy="attachedProjects", cascade=CascadeType.ALL) 
+    @ManyToMany
     public Set<User> attachedUsers; 
 
     @OneToMany(mappedBy="project", cascade=CascadeType.ALL)
     public Set<Release> releases;
+    
+    @OneToMany(mappedBy="project", cascade=CascadeType.ALL) 
+    public Set<Role> attachedRoles;
     
     @Override
     public String toString() {
