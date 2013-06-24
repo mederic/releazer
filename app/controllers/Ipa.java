@@ -11,25 +11,29 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import models.FileStat;
+import models.IpaFileToken;
 
 import models.User;
+import play.db.jpa.GenericModel;
 
 import play.libs.XML;
 import play.mvc.Controller;
 
 public class Ipa extends Controller {
 
-    public static void getIpaFile(String fileCode) {
-        final models.File file = models.File.find("byFileCode", fileCode).first();
-
+    public static void getIpaFile(String fileToken) {
+        final models.File file = IpaFileToken.getFileForToken(fileToken);
+        
         notFoundIfNull(file);
         response.setContentTypeIfNotSet(file.file.type());
         renderBinary(file.file.get());
     }
 
-    public static void getIpaManifest(String fileCode, long userId) {
-        final models.File file = models.File.find("byFileCode", fileCode).first();
+    public static void getIpaManifest(String fileToken, long userId) {
+        final models.File file = IpaFileToken.getFileForToken(fileToken);
 
+        notFoundIfNull(file);
+        
         file.addStatEntryByUserId(userId, request);
     	
         String textResponse = "";
@@ -46,7 +50,7 @@ public class Ipa extends Controller {
         textResponse += "<key>kind</key>";
         textResponse += "<string>software-package</string>";
         textResponse += "<key>url</key>";
-        textResponse += "<string>" + play.Play.configuration.getProperty("application.baseUrl") + "/ipa/" + file.fileCode + ".ipa</string>";
+        textResponse += "<string>" + play.Play.configuration.getProperty("application.baseUrl") + "/ipa/" + fileToken + ".ipa</string>";
 
         textResponse += "</dict>";
         textResponse += "</array>";

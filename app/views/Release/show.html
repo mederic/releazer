@@ -98,8 +98,8 @@
     <li>
    		<span class="filename">${file.name}</span>
    		
-		#{if ((file.type == models.File.FileType.IPA) && (deviceType == controllers.DeviceHelper.DeviceType.IOS))}
-			<a href="itms-services://?action=download-manifest&amp;url=${play.Play.configuration.getProperty("application.baseUrl")}@{Ipa.getIpaManifest(file.fileCode, controllers.Security.getCurrentUser().id)}" class="button stat-target">Install</a>
+		#{if ((file.type == models.File.FileType.IPA) && (deviceType != controllers.DeviceHelper.DeviceType.IOS))}
+			<a href="itms-services://?action=download-manifest&amp;url=${play.Play.configuration.getProperty("application.baseUrl")}@{Ipa.getIpaManifest(file.getFileTokenFor(controllers.Security.getCurrentUser()), controllers.Security.getCurrentUser().id)}" class="button stat-target">Install</a>
 		#{/if}
 		#{else}
 			<a href="@{Release.getFile(file.id, file.name)}" class="button">Download</a>

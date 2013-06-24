@@ -108,7 +108,6 @@ public class Release extends Controller {
 					// ipa, we need more data...
 	                
 					newFile.type = FileType.IPA;
-					newFile.fileCode = Codec.hexSHA1(new Date().getTime() + file.getName());
 					newFile.metadata = ipaMetadata;
 				}
 			}

@@ -17,20 +17,22 @@ import play.mvc.Http;
 public class File extends Model {
 
     public enum FileType {
-
         STANDARD,
         IPA
     };
+    
     @Required
     public String name;
+    
     @Required
     public FileType type;
     public HashMap<String, String> metadata = new HashMap<String, String>();
+    
     @Required
     public Blob file;
+    
     @ManyToOne
     public Release release;
-    public String fileCode;
 
     @Override
     public String toString() {
@@ -58,5 +60,18 @@ public class File extends Model {
         stats.userAgent = userAgent;
 
         stats.save();
+    }
+    
+    public String getFileTokenFor(User user) {
+        IpaFileToken token = IpaFileToken.getFileTokenFor(this, user);
+        if (token == null) {
+            token = new IpaFileToken(this, user);
+            token.save();
+        }
+        
+        if (token != null)
+            return token.token;
+        else
+            return null;
     }
 }
