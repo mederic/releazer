@@ -36,7 +36,7 @@ POST	/release/{<[0-9]+>id}/addFile		Release.addFile
 
 # file
 GET	/file/{<[0-9]+>id}/{filename}		Release.getFile
-GET	/ipa/{fileCode}.ipa					Ipa.getIpaFile
-GET	/ipa/manifest/{<[0-9]+>userId}/{fileCode}.plist		Ipa.getIpaManifest
+GET	/ipa/{fileToken}.ipa					Ipa.getIpaFile
+GET	/ipa/manifest/{<[0-9]+>userId}/{fileToken}.plist		Ipa.getIpaManifest
 
 POST	/file/{<[0-9]+>id}/delete		Release.deleteFile
