@@ -35,9 +35,9 @@ public class Release extends Model {
     
     @Required
     public Date date;
-
-    @MaxSize(4096)
-    @Column(length=4096)
+    
+    @Lob
+    @Column(columnDefinition = "text")
     public String note;
 
     @OneToMany(mappedBy="release", cascade=CascadeType.ALL)
