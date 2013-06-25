@@ -10,6 +10,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import play.data.binding.As;
 import play.data.validation.Required;
@@ -17,6 +18,7 @@ import play.db.jpa.Blob;
 import play.db.jpa.Model;
 
 @Entity
+@Table(name="ProjectRelease")
 public class Release extends Model {
 
     @Required
@@ -32,6 +34,7 @@ public class Release extends Model {
     @Required
     public Date date;
 
+    @Lob
     public String note;
 
     @OneToMany(mappedBy="release", cascade=CascadeType.ALL)
