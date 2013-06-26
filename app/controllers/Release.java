@@ -13,6 +13,7 @@ import models.FileStat;
 import models.IpaFileToken;
 import models.RoleType;
 import models.User;
+import notifiers.Mails;
 
 
 import play.db.jpa.Blob;
@@ -52,7 +53,7 @@ public class Release extends Controller {
 
 				release.delete();
 
-				flash.success("Release succesfully deleted !");
+				flash.success("Release successfully deleted !");
 				flash.keep();
 
 				Project.show(projectId);
@@ -67,9 +68,13 @@ public class Release extends Controller {
 					notFound();
 				}
 
-				flash.success("Release succesfully deleted !");
+                                for (User user : release.project.getUsersToNotify()) {
+                                    Mails.releasePublished(user, release);
+                                }
+                                
+				flash.success("Release successfully published !");
 			} else {		
-				flash.success("Release succesfully updated !");
+				flash.success("Release successfully updated !");
 			}
 			flash.keep();
 
@@ -117,7 +122,7 @@ public class Release extends Controller {
 			newFile.save();
 		}
 
-		flash.success("File succesfully added !");
+		flash.success("File successfully added !");
 		show(release.id);
 	}
 
@@ -134,7 +139,7 @@ public class Release extends Controller {
                 file.file.getFile().delete();
 		file.delete();
 
-		flash.success("File succesfully deleted !");
+		flash.success("File successfully deleted !");
 		show(release.id);
 	}
 

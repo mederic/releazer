@@ -1,0 +1,19 @@
+${user.name},
+
+A new release has been published for ${release.project.name}.
+
+You can see details to @@{Release.show(release.id)}.
+
+${release.name}
+=================================================
+
+Release note :
+-------------------------------------------------
+${release.note}
+
+Release files :
+-------------------------------------------------
+#{list release.attachedFiles, as:'file'}
+  - ${file.name}
+#{/list}
+
