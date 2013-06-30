@@ -20,11 +20,11 @@ public class Role extends Model {
 	@Required
     @ManyToOne
     public User user;
-	
+
 	@Required
     @ManyToOne
     public RoleType role;
-	
+
 	@Required
     @ManyToOne
     public Project project;

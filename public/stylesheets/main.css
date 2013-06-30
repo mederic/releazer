@@ -39,6 +39,9 @@ h3 {
 }
 /* -------------------------- Button -------------------------- */
 a.button,
+.crudNew a,
+.crudDelete input,
+#crudListAdd a,
 .button {
 	-moz-box-shadow:inset 0px 1px 0px 0px #fed897;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #fed897;
@@ -59,6 +62,9 @@ a.button,
 	text-decoration:none;
 	text-shadow:1px 1px 0px #cd8a15;
 }
+.crudNew a:hover,
+.crudDelete input:hover,
+#crudListAdd a:hover,
 .button:hover {
 	cursor: pointer;
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #d29105), color-stop(1, #f6b33d) );
@@ -66,6 +72,9 @@ a.button,
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#d29105', endColorstr='#f6b33d');
 	background-color:#d29105;
 }
+.crudNew a:active,
+.crudDelete input:active,
+#crudListAdd a:active,
 .button:active {
 	position:relative;
 	top:1px;
@@ -175,7 +184,8 @@ p.success {
     font-size: 0.6em;
     color: #aaa;
 }
-#breadcrumb .current {
+#breadcrumb .current,
+#breadcrumb a:last-child {
     font-size: 0.8em;
     color: #ffb220;
 }

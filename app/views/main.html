@@ -2,7 +2,7 @@
 
 <html>
     <head>
-        <title>#{get 'title' /}</title>
+        <title>Releazer - #{get 'title' /}</title>
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -12,7 +12,7 @@
         <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-        <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/jquery-1.10.1.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         #{get 'moreScripts' /}
     </head>
     <body>
@@ -31,7 +31,14 @@
 		</li>
 		<li>
 		    <a href="@{Secure.logout}">Log out</a>
-		</li>		    
+		</li>		
+                
+                #{if (controllers.Security.getCurrentUser().isAdmin)}
+		<li>
+		    <a href="@{CRUD.index}">Administration</a>
+		</li>	
+                #{/if}
+                
 		<li class="current-user">
 		    <span>${controllers.Security.connected()}</span>
 		    #{gravatar.img controllers.Security.getCurrentUserEmail(), size:56, default:'identicon' /}
@@ -45,26 +52,41 @@
 	    </ul>	
 	</header>
 	<section>
-	    
-	    #{ifErrors}	  
-	    <p class="error">  
-		#{errors}
-		<li>${error}</li>
-		#{/errors}
-	    </p>
-	    #{/ifErrors}
+            #{if (request.controllerClass.getSuperclass() != controllers.CRUD.class)}
+                #{ifErrors}	  
+                <p class="error">  
+                    #{errors}
+                    <li>${error}</li>
+                    #{/errors}
+                </p>
+                #{/ifErrors}
+                
+                
+                #{if flash.error}
+                <p class="error">
+                    &{flash.error}
+                </p>
+                #{/if}
 
-	    #{if flash.error}
-	    <p class="error">
-		&{flash.error}
-	    </p>
-	    #{/if}
-	    
-	    #{if flash.success}
-	    <p class="success">
-		&{flash.success}
-	    </p>
-	    #{/if}
+                #{if flash.success}
+                <p class="success">
+                    &{flash.success}
+                </p>
+                #{/if}
+            
+            #{/if}
+            #{else}
+                #{if flash.success}
+                    <p class="success">
+                        ${flash.success}
+                    </p>
+                #{/if}
+                #{if flash.error || error}
+                    <p class="error">
+                        ${error ?: flash.error}
+                    </p>
+                #{/if}
+            #{/else}
 
 	    #{doLayout /}
 	</section>
