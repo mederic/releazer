@@ -1,0 +1,15 @@
+<aside id="breadcrumb">    
+    <a href="@{CRUD.index()}">&{'crud.home'}</a>
+    #{if _caller.type}
+        <span class="separator">></span>
+        <a href="@{list()}">&{_caller.type.name}</a>
+    #{/if}
+    #{if _caller.object?._key()}
+        <span class="separator">></span>
+        <a href="@{show(_caller.object._key())}">${_caller.object?.toString()?.escape()?.raw()}</a>
+    #{/if}
+    #{if request.actionMethod == 'blank' || request.actionMethod == 'create'}
+        <span class="separator">></span>
+        <a href="@{blank()}">&{'crud.blank'}</a>
+    #{/if}
+</aside>

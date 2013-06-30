@@ -1,0 +1,72 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.show.title', type.modelName) /}
+
+<script src="@{'/public/javascripts/crud/projects.js'}"></script>
+
+<div id="crudShow" class="${type.name}">
+
+    <h2 id="crudShowTitle">&{'crud.show.title', type.modelName}</h2>
+
+    <div class="objectForm">
+    #{form action:@save(object._key()), enctype:'multipart/form-data'}
+        #{crud.form}
+        
+            #{crud.custom 'releases'}
+            #{/crud.custom}
+            
+            #{crud.custom 'attachedRoles'}
+                <h3>Users roles</h3>
+                
+                <h4>Current attached users</h4>
+                <ul id="users-role-list">
+                #{list items:object.attachedRoles, as:'role'}
+                    <li>
+                        #{gravatar.img role.user.email, size:24, default:'identicon' /}
+                        <select name="role-${role.user.id}">   
+                            <option value="-1">Remove from this project</option>                         
+                            #{list items:models.RoleType.findAll(), as:'roleType'}
+                                #{if (roleType.id == role.role.id)}
+                                    <option value="${roleType.id}" selected="selected">${roleType.name}</option>
+                                #{/if}
+                                #{else}
+                                    <option value="${roleType.id}">${roleType.name}</option>
+                                #{/else}
+                            #{/list}
+                        </select>
+                        <span>${role.user.name}</span>
+                    </li>
+	        #{/list}
+                </ul>
+                
+                <h4>New user</h4>
+                <p>Select a new user to add to this project...</p>
+                <select name="new-user-id" id="new-user-id">   
+                    <option value="-1">none</option>                         
+                    #{list items:usersNotInProjet, as:'user'}
+                        <option value="${user.id}">${user.toString()}</option>
+                    #{/list}
+                </select>
+                <select name="new-user-role-id" id="new-user-role-id">                         
+                    #{list items:models.RoleType.findAll(), as:'roleType'}
+                        <option value="${roleType.id}">${roleType.name}</option>
+                    #{/list}
+                </select>
+                
+            #{/crud.custom}
+    
+        #{/crud.form}
+        
+        <p class="crudButtons">
+            <input type="submit" name="_save" value="&{'crud.save', type.modelName}" />
+            <input type="submit" name="_saveAndContinue" value="&{'crud.saveAndContinue', type.modelName}" />
+        </p>
+    #{/form}
+    </div>
+
+    #{form @delete(object._key())}
+        <p class="crudDelete">
+            <input type="submit" value="&{'crud.delete', type.modelName}" />
+        </p>
+    #{/form}
+
+</div>

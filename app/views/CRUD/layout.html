@@ -1,0 +1,19 @@
+#{extends 'main.html' /}
+#{set title:'Administration' /}
+
+#{if request.actionMethod != 'index'}
+    #{crud.navigation /}
+#{/if}
+
+<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/crud.css'}" />
+    <div id="crud">
+
+        <div id="crudHeader">
+            <h1>&{'crud.title'}</h1>
+        </div>
+
+        <div id="crudContent">
+#{doLayout /}
+        </div>
+
+</div>
