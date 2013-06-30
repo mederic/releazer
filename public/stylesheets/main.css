@@ -18,6 +18,9 @@ a:hover, a:focus {
     cursor: pointer;
     color: #ff9200;
 }
+.large-screen {
+    display: none;
+}
 h1, h2, h3 {
     font-family: 'Roboto Slab', serif;
     text-align: center;

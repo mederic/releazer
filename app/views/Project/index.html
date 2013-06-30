@@ -5,7 +5,37 @@
 <ul id="project-list">
 #{list projects, as:'project'}
 	<li>
-		<a href="@{Project.show(project.getId())}" class="button">${project.name}</a>
+		<a href="@{Project.show(project.getId())}" class="button small-screen">${project.name}</a>
+                
+                
+                <a href="@{Project.show(project.getId())}" class="large-screen project-box">
+                    <div class="img-container">
+                        <div class="vertical-align"></div>
+                        #{if (project.logo.exists())}
+                            <img src="@{Project.renderLogo(project.getId())}">
+                        #{/if}
+                        #{else}
+                            <img src="@{'/public/images/default-logo.png'}">
+                        #{/else}
+                    </div>
+                    <div class="detail-container">
+                        <h2>${project.name}</h2>
+                        <div class="last-release">
+                        #{if (project.getLastRelease() == null)}
+                            <span class="no-last-release">No published release...</span>
+                        #{/if}
+                        #{else}
+                            last release : <strong>${project.getLastRelease().name}</strong>, ${project.getLastRelease().date.format('dd/MM/yyyy HH:mm')}
+                        #{/else}
+                        </div>
+                        
+                        <div class="project-attached-users">
+                        #{list project.getUsers(), as:'user'}
+                            #{gravatar.img user.email, size:24, default:'identicon' /}
+                        #{/list}
+                        </div>
+                    </div>
+                </a>
 	</li>
 #{/list}
 </ul>

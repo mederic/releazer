@@ -24,6 +24,7 @@ POST	/account				Application.updateAccount
 # project
 GET	/projects				Project.index
 GET	/project/{<[0-9]+>id}			Project.show
+GET	/project/{<[0-9]+>id}/logo		Project.renderLogo
 GET	/project/{<[0-9]+>id}/last		Project.showLastRelease
 
 POST	/project/{<[0-9]+>id}/new		Project.newRelease

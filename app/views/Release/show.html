@@ -9,75 +9,48 @@
     <span class="current">${release.name}</span>
 </aside>
 
-#{if (deviceType == controllers.DeviceHelper.DeviceType.STANDARD)}
-<aside class="qr-code">
-    <img src="http://chart.apis.google.com/chart?cht=qr&chs=177x177&chl=@@{Release.show(release.id)}" alt="qrcode for this page" />
-</aside>
-#{/if}
+<div class="block-right">
+    #{if (deviceType == controllers.DeviceHelper.DeviceType.STANDARD)}
+        <aside class="qr-code">
+            <img src="http://chart.apis.google.com/chart?cht=qr&chs=177x177&chl=@@{Release.show(release.id)}" alt="qrcode for this page" />
+        </aside>
+    #{/if}
 
 #{if (release.isPublished || !currentUserRoleType.canWritePlannedRelease)}
-	
+<div class="details-container">
 <h1>${release.name}</h1>
 <span id="release-date" class="date">${release.date.format('dd/MM/yyyy HH:mm')}</span>
-
+</div>
 <h2>Release note</h2>
 <p>
     #{if (release.note)}	    
-    ${release.note}
+    ${release.note.nl2br()}
     #{/if}
     #{else}
     <em>no release note...</em>
     #{/else}
 </p>
-
-#{if (currentUserRoleType.canReadReleaseStats)}
-	<h2>Statistics</h2>
-	
-	#{if (release.attachedFiles.isEmpty())}
-	    <em>There's no any file attached for statistics...</em>
-	#{/if}
-	#{else}
-		#{list release.attachedFiles, as:'file'}
-			<h3>${file.name}</h3>
-			#{if (file.type == models.File.FileType.IPA)}
-				<ul id="ipa-stats">					
-					#{list file.getStatistics(), as:'stat'}
-						<li>
-							<span class="date">${stat.date.format('dd/MM/yyyy HH:mm')}</span>
-							<span class="user">${stat.user.username}</span>
-							<div class="user-agent">${stat.userAgent}</div>
-						</li>
-					#{/list}
-				</ul>
-			#{/if}
-			#{else}
-				<em>No statistics for this kind of file...</em>
-			#{/else}
-		#{/list}
-	#{/else}
-#{/if}
-
 #{/if}
 #{else}
 
-<h2>Edition mode</h2>
-<span class="date">Last edit : ${release.date.format('dd/MM/yyyy HH:mm')}</span>
-
-<h3>Informations</h3>
+<div class="details-container">
+<h1>Edition mode</h1>
+<span id="release-date" class="date">Last edit : ${release.date.format('dd/MM/yyyy HH:mm')}</span>
+</div>
 
 #{form @Release.edit(release.id)}
 
 <label for="name">Release name</label>
 <input type="text" name="name" value="${release.name}" placeholder="Release name..."/>
 
+
 <label for="note">Release note</label>
 <textarea name="note" placeholder="Release note...">${release.note}</textarea>
 
+<input type="submit" name="action" value="save" />
 #{if (currentUserRoleType.canDeletePlannedRelease)}
 <input type="submit" name="action" value="delete" />
 #{/if}
-
-<input type="submit" name="action" value="save" />
 
 #{if (currentUserRoleType.canPublishPlannedRelease)}
 <input type="submit" name="action" value="publish" />
@@ -85,8 +58,9 @@
 #{/form}
 
 #{/else}
+</div>
 
-
+<div class="block-left">
 <h2>Attached files</h2>
 	
 #{if (release.attachedFiles.isEmpty())}
@@ -114,9 +88,37 @@
     #{/list}
 </ul>
 
+#{if (currentUserRoleType.canReadReleaseStats && release.isPublished)}
+	<h2>Statistics</h2>
+	
+	#{if (release.attachedFiles.isEmpty())}
+	    <em>There's no any file attached for statistics...</em>
+	#{/if}
+	#{else}
+		#{list release.attachedFiles, as:'file'}
+			<h3>${file.name}</h3>
+			#{if (file.type == models.File.FileType.IPA)}
+				<ul id="ipa-stats">					
+					#{list file.getStatistics(), as:'stat'}
+						<li>
+							<span class="date">${stat.date.format('dd/MM/yyyy HH:mm')}</span>
+							<span class="user">${stat.user.username}</span>
+							<div class="user-agent">${stat.userAgent}</div>
+						</li>
+					#{/list}
+				</ul>
+			#{/if}
+			#{else}
+				<em>No statistics for this kind of file...</em>
+			#{/else}
+		#{/list}
+	#{/else}
+#{/if}
+
 #{if (!release.isPublished && currentUserRoleType.canWritePlannedRelease)}
 	#{form @Release.addFile(release.id), enctype:'multipart/form-data', id:'add-file-form'}
 		<input type="file" name="file">
 		<input type="submit" name="submit" value="Upload file">
 	#{/form}
 #{/if}
+</div>

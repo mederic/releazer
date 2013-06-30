@@ -62,4 +62,16 @@ public class Project extends Controller {
         models.Release lastRelease = models.Release.find("project = ? and isPublished = ? order by date desc", project, true).first();
         Release.show(lastRelease.id);
     }
+    
+    public static void renderLogo(long id) {
+        models.Project project = models.Project.findById(id);
+
+        if (!Security.isAuthorizedFor(project)) {
+            notFound();
+        }
+        notFoundIfNull(project.logo);
+        
+        response.setContentTypeIfNotSet(project.logo.type());
+        renderBinary(project.logo.get());
+    }
 }

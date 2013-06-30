@@ -1,0 +1,141 @@
+@media only screen and (min-width: 768px) {
+    
+    .large-screen {
+        display: inherit;
+    }
+    
+    .small-screen {
+        display: none!important;
+    }
+    
+    header {
+        position: absolute;
+    }
+    
+    section {
+        width: 75%;
+        overflow: hidden;
+        margin: auto;
+    }
+    
+    /* ****************************** project list ****************************** */
+    ul#project-list {
+        margin: auto;
+    }
+    
+    ul#project-list a.project-box {
+        display: block;
+        overflow: hidden;
+        padding: 8px;
+        max-width: none;
+    }
+    
+    ul#project-list a.project-box:hover {
+        background-color: #eee;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+    }
+    
+    ul#project-list .detail-container {
+        float: right;
+    }
+    
+    ul#project-list .img-container {
+        background-color: white;
+        height: 96px;
+        width: 96px;
+        margin-right: 12px;
+        
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        float: left;
+        
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+        -webkit-box-shadow:  0px 0px 8px 0px #bbb;        
+        box-shadow:  0px 0px 8px 0px #bbb;
+    }
+    
+    ul#project-list .img-container .vertical-align {
+        height: 100%;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    
+    ul#project-list .img-container img {
+        max-height: 88px;
+        max-width: 88px;
+        margin: 8px auto;
+        vertical-align: middle;
+    }
+    
+    ul#project-list h2 {
+        text-align: right;
+        margin: 0;
+    }
+    
+    ul#project-list a.project-box .last-release {
+        font-size: 0.9em;
+    }
+    
+    ul#project-list a.project-box:hover .last-release {
+        color: #444;
+    }
+    
+    ul#project-list .project-attached-users {
+        text-align: right;
+        margin: 4px;
+    }
+    
+    /* ****************************** release page ****************************** */
+    aside.qr-code {
+        margin-top: 0;
+        float: left;
+        margin-right: 16px;
+        overflow: visible;
+    }
+    
+    .block-right .details-container {
+        min-height: 128px;
+        text-align: right;
+    }
+    
+    .block-right .details-container h1 {
+        text-align: right;
+        margin-top: 0;
+        font-size: 32px;
+    }
+    
+    .block-right {
+        float: right;
+        width: 60%;
+        padding: 0 2%;
+        width: 58%;
+        margin-top: 12px;
+    }
+    
+    .block-left {
+        float: left;
+        width: 36%;
+        background-color: #f8f8f8;
+        padding: 1%;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+        margin-top: 12px;
+        padding-bottom: 36px;
+    }
+    
+    .block-right h2,
+    .block-right p {
+        text-align: left;
+    }
+    
+    .block-right input, 
+    .block-right textarea {
+        max-width: none;
+    }
+}

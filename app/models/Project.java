@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import play.data.validation.Required;
+import play.db.jpa.Blob;
 import play.db.jpa.Model;
 
 @Entity
@@ -21,6 +22,9 @@ public class Project extends Model implements Comparator<Release> {
 
     @Required
     public String name;
+    
+    public Blob logo;
+    
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     public Set<Release> releases;
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
@@ -37,6 +41,17 @@ public class Project extends Model implements Comparator<Release> {
         return result;
     }
 
+    public List<User> getUsers() {
+        List<Role> roles = Role.find("byProject", this).fetch();
+        List<User> result = new ArrayList<User>();
+
+        for (Role role : roles) {
+            result.add(role.user);
+        }
+
+        return result;
+    }
+    
     public List<User> getUsersToNotify() {
         List<Role> roles = Role.find("byProject", this).fetch();
         List<User> result = new ArrayList<User>();
@@ -69,6 +84,11 @@ public class Project extends Model implements Comparator<Release> {
         return result;
     }
 
+    public Release getLastRelease() {
+        models.Release lastRelease = models.Release.find("project = ? and isPublished = ? order by date desc", this, true).first();
+        return lastRelease;
+    }
+    
     @Override
     public int compare(Release o1, Release o2) {
         return o2.date.compareTo(o1.date);
