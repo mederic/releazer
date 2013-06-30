@@ -9,9 +9,6 @@
     #{form action:@create(), enctype:'multipart/form-data'}
         #{crud.form}            
             #{crud.custom 'password'}  
-                #{if (object && object.password)}
-                    <span class="sha-1-current-value">Current sha-1 value : ${object.password}</span>
-                #{/if}
                 #{crud.textField name:'password', value:null /}
                 <span class="crudHelp">Required.</span>
             #{/crud.custom}
