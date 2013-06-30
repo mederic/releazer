@@ -44,7 +44,7 @@
 					#{list file.getStatistics(), as:'stat'}
 						<li>
 							<span class="date">${stat.date.format('dd/MM/yyyy HH:mm')}</span>
-							<span class="user">${stat.user.name}</span>
+							<span class="user">${stat.user.username}</span>
 							<div class="user-agent">${stat.userAgent}</div>
 						</li>
 					#{/list}

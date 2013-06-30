@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
@@ -16,7 +17,8 @@ import play.db.jpa.Model;
 public class User extends Model {
 	
     @Required
-    public String name;
+    @Column(name="name", unique=true)
+    public String username;
     
     @Required
     @Email
@@ -33,7 +35,7 @@ public class User extends Model {
     
     @Override
     public String toString() {
-    	return "[" + this.getId() + "] " + name;
+    	return "[" + this.getId() + "] " + username;
     }
 
 	public List<Project> getProjects() {

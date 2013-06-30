@@ -121,10 +121,19 @@ label {
 	cursor: pointer;
 }
 
+.sha-1-current-value,
 .crudField {
 	padding: 10px;
 	border-bottom: 1px solid #eee;
 	position: relative;
+}
+
+.sha-1-current-value {
+    padding: 8px 0 0 0;
+    color: #666;
+    font-style: italic;
+    border-bottom: none;
+    font-size: 10px;
 }
 
 .crudField input[type=text],

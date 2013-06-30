@@ -1,4 +1,4 @@
-${user.name},
+${user.username},
 
 A new release has been published for ${release.project.name}.
 

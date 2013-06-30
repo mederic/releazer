@@ -31,6 +31,6 @@ public class Role extends Model {
 
     @Override
     public String toString() {
-    	return "[" + this.getId() + "] " + user.name + " : " + role.toString() + " for " + project.name;
+    	return "[" + this.getId() + "] " + user.username + " : " + role.toString() + " for " + project.name;
     }
 }

@@ -35,7 +35,7 @@ public class IpaFileToken extends Model {
 
     @Override
     public String toString() {
-        return "[" + this.getId() + "] " + file.name + " for " + user.name + " : " + token + ". creation date : " + creationDate.toString();
+        return "[" + this.getId() + "] " + file.name + " for " + user.username + " : " + token + ". creation date : " + creationDate.toString();
     }
 
     public static void cleanTokens() {

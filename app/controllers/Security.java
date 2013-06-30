@@ -19,7 +19,7 @@ public class Security extends Secure.Security {
             if (username.equals(ADMIN_NAME) && password.equals(ADMIN_PASSWORD)) {
                 User admin = new User();
                 admin.isAdmin = true;
-                admin.name = ADMIN_NAME;
+                admin.username = ADMIN_NAME;
                 admin.email = ADMIN_EMAIL;
                 admin.password = Codec.hexSHA1(ADMIN_PASSWORD);
                 admin.save();

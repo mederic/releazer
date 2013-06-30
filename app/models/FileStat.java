@@ -33,6 +33,6 @@ public class FileStat extends Model {
 	
     @Override
     public String toString() {
-    	return "[" + this.getId() + "] " + user.name + " : " + file.name + ". Time : " + date.getTime();
+    	return "[" + this.getId() + "] " + user.username + " : " + file.name + ". Time : " + date.getTime();
     }
 }
