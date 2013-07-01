@@ -66,10 +66,14 @@
     }
     
     ul#project-list .img-container img {
-        max-height: 88px;
-        max-width: 88px;
-        margin: 8px auto;
-        vertical-align: middle;
+        max-height: 80px;
+		max-width: 80px;
+		margin: 8px auto;
+		margin-right: 4px;
+		vertical-align: middle;
+		-moz-border-radius:6px;
+		-webkit-border-radius:6px;
+		border-radius:6px;
     }
     
     ul#project-list h2 {
