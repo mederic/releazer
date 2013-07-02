@@ -292,7 +292,8 @@ aside.qr-code img {
 #release-files-list li input[type=submit] {	
 	display: inline-block;
 	margin: 0 2px;
-	padding: 4px 6px;
+	padding: 4px 6px;        
+        float: right;
 }
 #ipa-stats li .date {
 	float: left;
@@ -310,4 +311,18 @@ aside.qr-code img {
 	text-align: center;
 	color: #666;
 	margin-bottom: 12px;
+}
+#progress {
+    margin: 6px 2px 15px 2px;
+    background-color: lightgray;
+}
+#progress,
+#progress .bar {
+    height: 4px;
+    -moz-border-radius:6px;
+    -webkit-border-radius:6px;
+    border-radius:6px;
+} 
+#progress .bar {
+    background-color: rgb(231, 184, 123);
 }

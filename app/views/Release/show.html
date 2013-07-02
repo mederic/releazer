@@ -33,6 +33,8 @@
 #{/if}
 #{else}
 
+<script src="@{'/public/javascripts/Release/show.edit.js'}"></script>
+
 <div class="details-container">
 <h1>Edition mode</h1>
 <span id="release-date" class="date">Last edit : ${release.date.format('dd/MM/yyyy HH:mm')}</span>
@@ -64,25 +66,23 @@
 <h2>Attached files</h2>
 	
 #{if (release.attachedFiles.isEmpty())}
-    <em>There's no any file attached to this release...</em>
+    <em id="no-attached-file">There's no any file attached to this release...</em>
 #{/if}
     
 <ul id="release-files-list" class="uploaded-files">
     #{list release.attachedFiles, as:'file'}
-    <li>
+    <li id="file-${file.id}">
    		<span class="filename">${file.name}</span>
    		
 		#{if ((file.type == models.File.FileType.IPA) && (deviceType == controllers.DeviceHelper.DeviceType.IOS))}
 			<a href="itms-services://?action=download-manifest&amp;url=${play.Play.configuration.getProperty("application.baseUrl")}@{Ipa.getIpaManifest(file.getFileTokenFor(controllers.Security.getCurrentUser()), controllers.Security.getCurrentUser().id)}" class="button stat-target">Install</a>
 		#{/if}
 		#{else}
-			<a href="@{Release.getFile(file.id, file.name)}" class="button">Download</a>
+			<a href="@{Release.getFile(file.id, file.name)}" class="button" target="_blank">Download</a>
 		#{/else}
 		
 		#{if (!release.isPublished && currentUserRoleType.canWritePlannedRelease)}
-			#{form @Release.deleteFile(file.id)}
-	        	<input class="button" type="submit" value="delete" />
-	        #{/form}
+                        <a class="button delete-file" id="delete-file-button-${file.id}">Delete</a>
 		#{/if}	
     </li>
     #{/list}
@@ -116,9 +116,55 @@
 #{/if}
 
 #{if (!release.isPublished && currentUserRoleType.canWritePlannedRelease)}
-	#{form @Release.addFile(release.id), enctype:'multipart/form-data', id:'add-file-form'}
-		<input type="file" name="file">
-		<input type="submit" name="submit" value="Upload file">
-	#{/form}
+
+        <script src="@{'/public/jQuery-File-Upload/js/vendor/jquery.ui.widget.js'}"></script>
+        <script src="@{'/public/jQuery-File-Upload/js/jquery.iframe-transport.js'}"></script>
+        <script src="@{'/public/jQuery-File-Upload/js/jquery.fileupload.js'}"></script>
+        <script>
+        $(function () {
+            $('#file-upload-input').fileupload({
+                dataType: 'json',
+                progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css('width', progress + '%');
+                },
+                done: function (e, data) {
+                    var wsresult = data.result;
+                    if (wsresult.status === 0) {
+                        $('#progress .bar').css('width', '0%');
+                        $('#no-attached-file').remove();
+                        var newContent = '<span class="filename">' + wsresult.data.filename + '</span>';
+                        
+                        #{if (deviceType != controllers.DeviceHelper.DeviceType.IOS)}
+                            if (wsresult.data.filetype == 'IPA') {
+                                newContent += '<a href="itms-services://?action=download-manifest&amp;url=' + wsresult.data.ipaManifestUrl + '" class="button stat-target">Install</a>';
+                            } else {
+                                newContent += '<a href="' + wsresult.data.url + '" class="button" target="_blank">Download</a>';                                
+                            } 
+                        #{/if}
+                        #{else}
+                            newContent += '<a href="' + wsresult.data.url + '" class="button" target="_blank">Download</a>';
+                        #{/else}
+                        
+                        
+                        #{if (!release.isPublished && currentUserRoleType.canWritePlannedRelease)}
+                            newContent += '<a class="button delete-file" id="delete-file-button-' + wsresult.data.id + '">Delete</a>';
+                        #{/if}
+                            
+                        $("#release-files-list").append('<li id="file-' + wsresult.data.id + '">' + newContent + '</li>');
+                    } else {
+                        alert("An error occured : [" + wsresult.status +"] " + wsresult.message);
+                    }
+                }
+            });
+        });
+        </script>
+        
+        <div id="progress">
+            <div class="bar" style="width: 0%;"></div>
+        </div>
+        
+        <input type="file" name="file" id="file-upload-input" data-url="@{Release.addFile(release.id)}">
+        
 #{/if}
 </div>
