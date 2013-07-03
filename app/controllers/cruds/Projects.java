@@ -34,10 +34,12 @@ public class Projects extends CRUD {
             }
         }
 
+        List<Release> releases = Release.find("project = ? order by isArchived, isPublished, date, desc", currentProject).first();
+        
         try {
-            render(type, object, usersNotInProjet);
+            render(type, object, usersNotInProjet, releases);
         } catch (TemplateNotFoundException e) {
-            render("CRUD/show.html", type, object, usersNotInProjet);
+            render("CRUD/show.html", type, object, usersNotInProjet, releases);
         }
     }
 

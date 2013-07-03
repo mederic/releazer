@@ -12,7 +12,9 @@
         #{crud.form}
         
             #{crud.custom 'releases'}
-            
+            	#{list items:releases, as:'release'}
+            		${release.name}, ${release.date}, ${release.isPublished}, ${release.isArchived}
+            	#{/list}
             #{/crud.custom}
             
             #{crud.custom 'attachedRoles'}
