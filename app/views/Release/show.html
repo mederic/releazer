@@ -135,7 +135,7 @@
                         $('#no-attached-file').remove();
                         var newContent = '<span class="filename">' + wsresult.data.filename + '</span>';
                         
-                        #{if (deviceType != controllers.DeviceHelper.DeviceType.IOS)}
+                        #{if (deviceType == controllers.DeviceHelper.DeviceType.IOS)}
                             if (wsresult.data.filetype == 'IPA') {
                                 newContent += '<a href="itms-services://?action=download-manifest&amp;url=' + wsresult.data.ipaManifestUrl + '" class="button stat-target">Install</a>';
                             } else {
