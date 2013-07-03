@@ -8,7 +8,7 @@
         <meta charset="${_response_encoding}">
         <link rel="apple-touch-icon" href="@{'/public/images/apple-touch-icon.png'}"/>  
         <link rel="apple-touch-startup-image" href="@{'/public/images/apple-splashscreen.png'}" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />  
+        <meta name="apple-mobile-web-app-capable" content="no" />  
         
 	<link href='http://fonts.googleapis.com/css?family=Noto+Sans|Roboto+Slab' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
@@ -17,7 +17,9 @@
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
         <script src="@{'/public/javascripts/jquery-1.10.1.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         #{get 'moreScripts' /}
-    </head>
+
+
+</head>
     <body>
 	<header>
 	    <a href="@{Application.index()}">
