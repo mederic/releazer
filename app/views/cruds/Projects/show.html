@@ -12,9 +12,47 @@
         #{crud.form}
         
             #{crud.custom 'releases'}
-            	#{list items:releases, as:'release'}
-            		${release.name}, ${release.date}, ${release.isPublished}, ${release.isArchived}
-            	#{/list}
+            	<ul id="release-list">
+            	
+	            	#{list items:releases, as:'release'}
+	            		#{if release.isPublished}	            				
+	         				#{if release.isArchived}
+	         					#{set state:'archived' /}
+	         				#{/if}
+	         				#{else}
+	         					#{set state:'published' /}
+	         				#{/else}
+        				#{/if}
+        				#{else}
+        					#{set state:'planned' /}
+        				#{/else}
+	            				
+	            		<li class="${state}">
+	            			<span class="date">${release.date.format('dd/MM/yyyy HH:mm')}</span> 
+	            			<span class="name">${release.name}</span>
+	            			<span class="status">${state}</span> 
+	            			
+	            			#{if release.isPublished}	            				
+		         				#{if release.isArchived}     					
+									#{form @deleteRelease(object.id, release.id)}
+										<input type="submit" value="Delete" />
+									#{/form}
+		         				#{/if}
+		        				#{else}	 		         					
+									#{form @archiveRelease(object.id, release.id)}
+										<input type="submit" value="Archive" />
+									#{/form}  
+		        				#{/else}	
+	        				#{/if}
+	        				#{else}		         					
+								#{form @publishRelease(object.id, release.id)}
+									<input type="submit" value="Publish" />
+								#{/form}
+	        				#{/else}
+        				
+	            		</li>
+	            	#{/list}
+            	</ul>
             #{/crud.custom}
             
             #{crud.custom 'attachedRoles'}

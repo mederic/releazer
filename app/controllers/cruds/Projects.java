@@ -34,7 +34,7 @@ public class Projects extends CRUD {
             }
         }
 
-        List<Release> releases = Release.find("project = ? order by isArchived, isPublished, date, desc", currentProject).first();
+        List<Release> releases = Release.find("project = ? order by date desc", currentProject).fetch();
         
         try {
             render(type, object, usersNotInProjet, releases);
@@ -100,6 +100,18 @@ public class Projects extends CRUD {
         redirect(request.controller + ".show", object._key());
     }
 
+    public static void publishRelease(String projectId, long releaseId) throws Exception {    	
+    	show(projectId);
+    }
+
+    public static void archiveRelease(String projectId, long releaseId) throws Exception {    	
+    	show(projectId);
+    }
+    
+    public static void deleteRelease(String projectId, long releaseId) throws Exception {    	
+    	show(projectId);
+    }
+    
     private static void saveRoles(Project project) {
         // Already added users -------------------
         if (project.attachedRoles != null) {
