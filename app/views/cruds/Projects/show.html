@@ -8,51 +8,60 @@
     <h2 id="crudShowTitle">&{'crud.show.title', type.modelName}</h2>
 
     <div class="objectForm">
-    #{form action:@save(object._key()), enctype:'multipart/form-data'}
+    #{form @save(object._key()), enctype:'multipart/form-data'}
         #{crud.form}
         
             #{crud.custom 'releases'}
-            	<ul id="release-list">
-            	
-	            	#{list items:releases, as:'release'}
-	            		#{if release.isPublished}	            				
-	         				#{if release.isArchived}
-	         					#{set state:'archived' /}
-	         				#{/if}
-	         				#{else}
-	         					#{set state:'published' /}
-	         				#{/else}
-        				#{/if}
-        				#{else}
-        					#{set state:'planned' /}
-        				#{/else}
-	            				
-	            		<li class="${state}">
-	            			<span class="date">${release.date.format('dd/MM/yyyy HH:mm')}</span> 
-	            			<span class="name">${release.name}</span>
-	            			<span class="status">${state}</span> 
-	            			
-	            			#{if release.isPublished}	            				
-		         				#{if release.isArchived}     					
-									#{form @deleteRelease(object.id, release.id)}
-										<input type="submit" value="Delete" />
-									#{/form}
+                <h3>Releases</h3>
+            	<table id="release-list">
+            		<thead>
+            			<tr>
+            				<th class="date">date</th>
+            				<th>name</th>
+            				<th class="checkbox">published</th>
+            				<th class="checkbox">archived</th>
+            			</tr>
+            		</thead>
+            		<tbody>
+		            	#{list items:releases, as:'release'}
+		            		#{if release.isPublished}	            				
+		         				#{if release.isArchived}
+		         					#{set state:'archived' /}
 		         				#{/if}
-		        				#{else}	 		         					
-									#{form @archiveRelease(object.id, release.id)}
-										<input type="submit" value="Archive" />
-									#{/form}  
-		        				#{/else}	
+		         				#{else}
+		         					#{set state:'published' /}
+		         				#{/else}
 	        				#{/if}
-	        				#{else}		         					
-								#{form @publishRelease(object.id, release.id)}
-									<input type="submit" value="Publish" />
-								#{/form}
+	        				#{else}
+	        					#{set state:'planned' /}
 	        				#{/else}
-        				
-	            		</li>
-	            	#{/list}
-            	</ul>
+		            				
+		            		<tr class="${state}">
+		            			<td class="date">${release.date.format('dd/MM/yyyy HH:mm')}</td> 
+		            			<td class="name">
+		            				#{a @cruds.Releases.show(release.id)}
+		            					${release.name}
+	            					#{/a}		            			
+		            			</td>
+		            			
+		            			#{if release.isPublished}	            				
+			         				#{if release.isArchived}  			         					         				
+			        					<td class="checkbox"><input type="checkbox" name="publish-${release.id}" disabled="disabled"  checked="checked"/></td>
+			        					<td class="checkbox"><input type="checkbox" name="archive-${release.id}" checked="checked" /></td>
+			         				#{/if}
+			        				#{else}	 
+			        					<td class="checkbox"><input type="checkbox" name="publish-${release.id}" disabled="disabled" checked="checked" /></td>
+			        					<td class="checkbox"><input type="checkbox" name="archive-${release.id}" /></td>
+			        				#{/else}	
+		        				#{/if}
+		        				#{else}		   
+		        					<td class="checkbox"><input type="checkbox" name="publish-${release.id}" /></td>
+		        					<td class="checkbox"><input type="checkbox" name="archive-${release.id}" disabled="disabled" /></td>
+		        				#{/else}        				
+		            		</tr>
+		            	#{/list}
+	            	</tbody>
+            	</table>
             #{/crud.custom}
             
             #{crud.custom 'attachedRoles'}

@@ -104,6 +104,10 @@ input, textarea, select {
 	font-size: 12px;
 }
 
+input[type="file"] {
+	margin: 22px 0 16px 0;
+}
+
 textarea {
 	padding: 2px;
 }
@@ -306,4 +310,19 @@ form .removeAttachment {
 	right: 0;
 	padding: 2px 10px;
 	cursor: pointer;
+}
+
+/** Show project **/
+#crudShow #release-list th.date {	
+	width: 92px;
+}
+
+#crudShow #release-list td.date {	
+	color: #888;
+	font-size: 0.7em;
+}
+#crudShow #release-list th.checkbox,
+#crudShow #release-list td.checkbox {
+	width: 80px;
+	text-align: center;
 }

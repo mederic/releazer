@@ -24,11 +24,12 @@ public class Project extends Model implements Comparator<Release> {
     public String name;
     
     public Blob logo;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    public Set<Role> attachedRoles;
     
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     public Set<Release> releases;
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    public Set<Role> attachedRoles;
 
     @Override
     public String toString() {

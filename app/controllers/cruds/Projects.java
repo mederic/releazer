@@ -50,7 +50,8 @@ public class Projects extends CRUD {
         notFoundIfNull(object);
 
         Projects.saveRoles((Project) object);
-
+        Projects.changeReleasesStates((Project) object);
+        
         Binder.bindBean(params.getRootParamNode(), "object", object);
         validation.valid(object);
         if (validation.hasErrors()) {
@@ -88,7 +89,7 @@ public class Projects extends CRUD {
         object._save();
 
         Projects.saveRoles((Project) object);
-
+        
         flash.success(play.i18n.Messages.get("crud.created", type.modelName));
 
         if (params.get("_save") != null) {
@@ -100,17 +101,22 @@ public class Projects extends CRUD {
         redirect(request.controller + ".show", object._key());
     }
 
-    public static void publishRelease(String projectId, long releaseId) throws Exception {    	
-    	show(projectId);
-    }
 
-    public static void archiveRelease(String projectId, long releaseId) throws Exception {    	
-    	show(projectId);
+    private static void changeReleasesStates(Project project) {
+    	if (project.releases != null) {
+    		for (Release release : project.releases) {
+    			if (release.isPublished) {
+        			boolean isArchived = (params.get("archive-" + release.id) != null);
+        			release.isArchived = isArchived;
+    			} else {
+    				boolean isPublished = (params.get("publish-" + release.id) != null);
+        			release.isPublished = isPublished;
+    			}
+    			release.save();
+    		}
+    	}
     }
     
-    public static void deleteRelease(String projectId, long releaseId) throws Exception {    	
-    	show(projectId);
-    }
     
     private static void saveRoles(Project project) {
         // Already added users -------------------
