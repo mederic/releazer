@@ -6,10 +6,10 @@
 GET     /                                       Application.index
 
 # Import Secure routes
-*      /                			module:secure
+*      /                						module:secure
 
 # Import CRUD routes
-*     /admin           				module:crud
+*     /admin           							module:crud
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
@@ -18,26 +18,31 @@ GET     /favicon.ico                            404
 GET     /public/                                staticDir:public
 
 # account
-GET	/account				Application.myAccount
-POST	/account				Application.updateAccount
+GET	/account									Application.myAccount
+POST	/account								Application.updateAccount
 
 # project
-GET	/projects				Project.index
-GET	/project/{<[0-9]+>id}			Project.show
-GET	/project/{<[0-9]+>id}/logo		Project.renderLogo
-GET	/project/{<[0-9]+>id}/last		Project.showLastRelease
+GET	/projects									Project.index
+GET	/project/{<[0-9]+>id}						Project.show
+GET	/project/{<[0-9]+>id}/logo					Project.renderLogo
+GET	/project/{<[0-9]+>id}/last					Project.showLastRelease
 
-POST	/project/{<[0-9]+>id}/new		Project.newRelease
+POST	/project/{<[0-9]+>id}/new				Project.newRelease
 
 # release
-GET	/release/{<[0-9]+>id}			Release.show
+GET	/release/{<[0-9]+>id}						Release.show
 
-POST	/release/{<[0-9]+>id}/edit		Release.edit
-POST	/release/{<[0-9]+>id}/addFile		Release.addFile
+POST	/release/{<[0-9]+>id}/edit				Release.edit
+POST	/release/{<[0-9]+>id}/addFile			Release.addFile
 
 # file
-GET	/file/{<[0-9]+>id}/{filename}		Release.getFile
-GET	/ipa/{fileToken}.ipa					Ipa.getIpaFile
+GET	/file/{<[0-9]+>id}/{filename}				Release.getFile
+GET	/ipa/{fileToken}.ipa						Ipa.getIpaFile
 GET	/ipa/manifest/{<[0-9]+>userId}/{fileToken}.plist		Ipa.getIpaManifest
 
-POST	/file/{<[0-9]+>id}/delete		Release.deleteFile
+POST	/file/{<[0-9]+>id}/delete				Release.deleteFile
+
+
+# ~~~~ Webservices ---------------------------
+GET	/api/user/token								ws.WSController.getUserToken
+GET /api/user/projects							ws.WSProject.get

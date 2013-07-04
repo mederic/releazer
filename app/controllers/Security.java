@@ -13,7 +13,7 @@ public class Security extends Secure.Security {
     final static String ADMIN_EMAIL = "admin@admin.com";
     
     
-    static boolean authenticate(String username, String password) {
+    public static boolean authenticate(String username, String password) {
         if (User.count() == 0) {
             // if no user, admin/admin is the default account...
             if (username.equals(ADMIN_NAME) && password.equals(ADMIN_PASSWORD)) {

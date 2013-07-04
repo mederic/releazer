@@ -18,6 +18,7 @@ public class IpaFileToken extends Model {
 
     // expiration time in ms for a file token
     private final static long TOKEN_EXPIRATION_DURATION = 2 * 60 * 60 * 1000; // = 2 hours 
+    
     @ManyToOne
     public File file;
     @ManyToOne

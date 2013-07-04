@@ -9,6 +9,7 @@ package ws;
  * @author mederic
  */
 public class WSResult {
+	
     public int status;
     public String message;
     
