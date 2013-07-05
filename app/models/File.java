@@ -3,6 +3,7 @@ package models;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,6 +15,7 @@ import play.data.validation.Required;
 import play.db.jpa.Blob;
 import play.db.jpa.Model;
 import play.mvc.Http;
+import play.mvc.Router;
 
 @Entity
 public class File extends Model {
@@ -32,6 +34,8 @@ public class File extends Model {
     
     @Required
     public Blob file;
+
+    public Blob icon;
     
     @ManyToOne
     public Release release;    
@@ -82,4 +86,25 @@ public class File extends Model {
         else
             return null;
     }
+
+	public HashMap toHashMap(User user) {
+		HashMap result = new HashMap<String, Object>();
+		result.put("id", this.id);
+		result.put("name", this.name);
+		result.put("type", this.type);
+
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("id", this.id);
+        args.put("filename", this.name);
+        Router.ActionDefinition actionDefinition = Router.reverse("Release.getFile", args);
+        result.put("url", actionDefinition.url);
+        
+        Map<String, Object> argsIpa = new HashMap<String, Object>();
+        argsIpa.put("fileToken", this.getFileTokenFor(user));
+        argsIpa.put("userId", user.id);  
+        Router.ActionDefinition actionDefinitionIpa = Router.reverse("Ipa.getIpaManifest", argsIpa);
+        result.put("ipaManifestUrl", actionDefinitionIpa.url);
+		
+		return result;
+	}
 }

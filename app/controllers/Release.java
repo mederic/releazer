@@ -121,6 +121,13 @@ public class Release extends Controller {
 
                     newFile.type = FileType.IPA;
                     newFile.metadata = ipaMetadata;
+                    
+                    if (newFile.metadata.containsKey("icon-path")) {
+                        Blob iconBlob = Ipa.getIconBlob(file, newFile.metadata.get("icon-path"));
+                        if (iconBlob != null) {
+                        	newFile.icon = iconBlob;
+                        }
+                    }
                 }
             }
             newFile.save();

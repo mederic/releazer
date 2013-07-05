@@ -3,6 +3,8 @@ package controllers.ws;
 import controllers.Security;
 import models.User;
 import models.ws.WSUserToken;
+import play.Play;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 import ws.WSConstants;
@@ -10,6 +12,13 @@ import ws.WSResult;
 
 public class WSController extends Controller {
 
+	@Before
+	public static void checkApiIsEnabled() {
+		String isEnabled = Play.configuration.getProperty("api.isEnabled");		
+		if ((isEnabled == null) || (!isEnabled.equalsIgnoreCase("yes")))
+			notFound();
+	}
+	
 	public static void getUserToken(String username, String password) {
 		
 		if (username == null) {
@@ -30,12 +39,13 @@ public class WSController extends Controller {
 		}
 	}
 	
-	protected static User getCurrentUser() {
+	protected static User getCurrentUser() {		
 		String candidateToken = params.get(WSConstants.USER_TOKEN_PARAM_NAME);
+		
 		WSUserToken userToken = WSUserToken.getUserTokenFor(candidateToken);
 		if (userToken != null)
 			return userToken.user;
-		else
+		else	
 			return null;
 	}
 }

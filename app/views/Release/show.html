@@ -71,8 +71,8 @@
     
 <ul id="release-files-list" class="uploaded-files">
     #{list release.attachedFiles, as:'file'}
-    <li id="file-${file.id}">
-   		<span class="filename">${file.name}</span>
+    <li id="file-${file.id}">                        
+   		<span class="filename">${file.name}</span>   		
    		
 		#{if ((file.type == models.File.FileType.IPA) && (deviceType == controllers.DeviceHelper.DeviceType.IOS))}
 			<a href="itms-services://?action=download-manifest&amp;url=${play.Play.configuration.getProperty("application.baseUrl")}@{Ipa.getIpaManifest(file.getFileTokenFor(controllers.Security.getCurrentUser()), controllers.Security.getCurrentUser().id)}" class="button stat-target">Install</a>

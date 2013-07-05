@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
+import controllers.Security;
+import controllers.ws.WSSecurity;
 
 import play.data.validation.Required;
 import play.db.jpa.Blob;
@@ -94,4 +98,29 @@ public class Project extends Model implements Comparator<Release> {
     public int compare(Release o1, Release o2) {
         return o2.date.compareTo(o1.date);
     }
+
+	public HashMap toHashMap(User user) {
+		HashMap result = new HashMap<String, Object>();
+		result.put("id", this.id);
+		result.put("name", this.name);
+		
+		if (this.logo.exists())
+			result.put("urlLogo", "/project/" + this.id + "/logo");
+		
+		List<HashMap> releases = new ArrayList<HashMap>();
+		for (Release release : this.releases) {
+			if (WSSecurity.isAuthorizedFor(user, release) && !release.isArchived) {
+				if (release.isPublished) {
+					releases.add(release.toHashMap(user));
+				} else {
+			        Role role = Role.find("byUserAndProject", user, this).first();
+			        if (role.role.canReadPlannedRelease)
+						releases.add(release.toHashMap(user));
+				}
+			}
+		}
+		result.put("releases", releases);
+		
+		return result;
+	}
 }

@@ -39,10 +39,11 @@ POST	/release/{<[0-9]+>id}/addFile			Release.addFile
 GET	/file/{<[0-9]+>id}/{filename}				Release.getFile
 GET	/ipa/{fileToken}.ipa						Ipa.getIpaFile
 GET	/ipa/manifest/{<[0-9]+>userId}/{fileToken}.plist		Ipa.getIpaManifest
+#GET	/ipa/icon/{<[0-9]+>id}						Ipa.renderIcon
 
 POST	/file/{<[0-9]+>id}/delete				Release.deleteFile
 
 
 # ~~~~ Webservices ---------------------------
 GET	/api/user/token								ws.WSController.getUserToken
-GET /api/user/projects							ws.WSProject.get
+GET /api/user/projects							ws.WSProject.getProjects

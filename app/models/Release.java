@@ -1,7 +1,10 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,6 +15,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import controllers.Security;
+import controllers.ws.WSSecurity;
 
 import play.data.binding.As;
 import play.data.validation.MaxSize;
@@ -50,4 +56,23 @@ public class Release extends Model {
     public String toString() {
     	return "[" + this.getId() + "] (" + project.name + ") "+ name;
     }
+
+	public HashMap toHashMap(User user) {
+		HashMap result = new HashMap<String, Object>();
+		result.put("id", this.id);
+		result.put("name", this.name);
+		result.put("date", this.date.getTime());
+		result.put("note", this.note);
+		result.put("isPublished", this.isPublished);
+		result.put("isArchived", this.isArchived);
+
+		List<HashMap> files = new ArrayList<HashMap>();
+		for (File file : this.attachedFiles) {
+			if (WSSecurity.isAuthorizedFor(user, file))
+				files.add(file.toHashMap(user));
+		}
+		result.put("files", files);
+		
+		return result;
+	}
 }
